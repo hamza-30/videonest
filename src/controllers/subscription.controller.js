@@ -18,13 +18,13 @@ const toggleSubscription = asyncHandler(async (req, res) => {
 
   const subscribed = await Subscription.findOne({
     subscriber: new mongoose.Types.ObjectId(req.user?._id),
-    channel: new mongoose.Types.ObjectId(channelId),
+    channel: channelId,
   });
 
   if (!subscribed) {
     const channelSubscribed = await Subscription.create({
       subscriber: new mongoose.Types.ObjectId(req.user?._id),
-      channel: new mongoose.Types.ObjectId(channelId),
+      channel: channelId,
     });
 
     return res
