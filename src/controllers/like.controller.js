@@ -58,7 +58,7 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   }
 
   const like = await Like.create({
-    commentId: commentId,
+    comment: commentId,
     likedBy: req.user._id,
   });
 
