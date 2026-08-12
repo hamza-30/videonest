@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
 
@@ -37,4 +38,7 @@ app.use("/api/v1/tweets", tweetRouter);
 app.use("/api/v1/likes", likeRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 app.use("/api/v1/healthcheck", healthCheckRouter);
+
+app.use(errorHandler);
+
 export { app };
