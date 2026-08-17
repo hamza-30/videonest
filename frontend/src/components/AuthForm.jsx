@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 function AuthForm({ mode }) {
   const isLogin = mode === "login";
@@ -252,22 +253,22 @@ function AuthForm({ mode }) {
         {isLogin ? (
           <div className={`text-sm mb-1`}>
             <span className={`text-gray-500`}>Don't have an account?</span>
-            <button
-              type="button"
+            <Link
+              to={"/signup"}
               className={`ml-1.5 text-[#8132e5] hover:underline active:underline`}
             >
               Sign Up
-            </button>
+            </Link>
           </div>
         ) : (
           <div className={`text-sm mb-1`}>
             <span className={`text-gray-500`}>Already have an account?</span>
-            <button
-              type="button"
+            <Link
+              to={"/login"}
               className={`ml-1.5 text-[#8132e5] hover:underline active:underline`}
             >
               Log In
-            </button>
+            </Link>
           </div>
         )}
       </form>
