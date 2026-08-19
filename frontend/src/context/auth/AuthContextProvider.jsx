@@ -10,8 +10,8 @@ function AuthContextProvider({ children }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const currentUser = await apiClient.get("/api/v1/users/current-user");
-        setUser(currentUser);
+        const response = await apiClient.get("/api/v1/users/current-user");
+        setUser(response.data);
       } catch (error) {
         setError(error);
       } finally {
@@ -23,7 +23,7 @@ function AuthContextProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, error }}>
+    <AuthContext.Provider value={{ user, setUser, loading, error }}>
       {children}
     </AuthContext.Provider>
   );
