@@ -1,29 +1,32 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
-import { apiClient } from "../../services/api";
+import { authService } from "../../services/authService";
+import Loading from "../../components/Loading";
 
 function AuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
+    const restoreSession = async () => {
       try {
-        const response = await apiClient.get("/api/v1/users/current-user");
+        const response = await authService.getCurrentUser();
         setUser(response.data);
       } catch (error) {
-        setError(error);
+        setUser(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCurrentUser();
+    restoreSession();
   }, []);
 
+  if (loading) {
+    return <Loading />;
+  }
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, error }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
