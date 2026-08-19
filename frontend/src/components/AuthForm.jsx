@@ -4,6 +4,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 function AuthForm({ mode }) {
   const isLogin = mode === "login";
@@ -19,8 +20,42 @@ function AuthForm({ mode }) {
   const avatarFile = watch("avatar")?.[0];
   const coverImageFile = watch("coverImage")?.[0];
 
-  const submit = (data) => {
-    console.log(data);
+  const { login, signup, loading, error } = useAuth();
+
+  const submit = async (data) => {
+    if (isLogin) {
+      const { loginIdentifier, password } = data;
+      let isEmail = false;
+      let email = "";
+      let username = "";
+
+      if (loginIdentifier.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) {
+        isEmail = true;
+      }
+
+      if (isEmail) {
+        email = loginIdentifier;
+        await login({ email, password });
+      } else {
+        username = loginIdentifier;
+        await login({ username, password });
+      }
+    } else {
+      const formData = new FormData();
+      formData.append("fullName", data.fullName);
+      formData.append("username", data.username);
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+      if (coverImageFile) {
+        formData.append("coverImage", coverImageFile);
+      }
+
+      await signup(formData);
+    }
   };
 
   return (
@@ -245,9 +280,18 @@ function AuthForm({ mode }) {
 
         <button
           type="submit"
-          className={`bg-[#8132e5] hover:bg-[#8032e5dd] active:bg-[#8032e5dd] text-white p-2 rounded-lg mt-2 cursor-pointer`}
+          disabled={loading}
+          className={`bg-[#8132e5] hover:bg-[#8032e5dd] active:bg-[#8032e5dd] text-white h-10 rounded-lg mt-2 cursor-pointer flex items-center justify-center disabled:pointer-events-none`}
         >
-          {isLogin ? "Log in" : "Create account"}
+          {loading ? (
+            <div
+              className={`border-2 border-white border-t-transparent rounded-full h-5 w-5 animate-spin text-center`}
+            ></div>
+          ) : isLogin ? (
+            "Log In"
+          ) : (
+            "Create Account"
+          )}
         </button>
 
         {isLogin ? (
