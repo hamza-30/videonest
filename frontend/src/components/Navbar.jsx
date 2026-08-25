@@ -112,18 +112,24 @@ function Navbar({
               {user.fullName}
             </div>
             <Link
+              to={`/channel/${user.username}`}
+              onClick={() => setIsAvatarMenuOpen(false)}
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 mt-1 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
             >
               <FaRegUser className={`text-[15px]`} />
               <span className={`text-[14px]`}>My channel</span>
             </Link>
             <Link
+              to={"/dashboard"}
+              onClick={() => setIsAvatarMenuOpen(false)}
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
             >
               <LuLayoutDashboard className={`text-[15px]`} />
               <span className={`text-[14px]`}>Dashboard</span>
             </Link>
             <Link
+              to={"/settings"}
+              onClick={() => setIsAvatarMenuOpen(false)}
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
             >
               <LuSettings className={`text-[15px]`} />
