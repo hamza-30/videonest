@@ -43,7 +43,7 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
       isActive
         ? "bg-[#f1edfc] border-[#8132e5]/20 text-[#8132e5]"
         : "bg-white border-gray-200 hover:bg-gray-50"
-    } ${showLabels ? "w-full gap-x-3 pl-3" : "w-11 justify-center"}`;
+    } w-full gap-x-3 pl-3`;
   const labelClassName = `mt-0.75 overflow-hidden whitespace-nowrap transition-all duration-150 ${
     showLabels
       ? "max-w-40 translate-x-0 opacity-100"
