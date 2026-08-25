@@ -8,6 +8,7 @@ import { FaRegUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuSettings } from "react-icons/lu";
 import { FiLogOut } from "react-icons/fi";
+import { useAuthContext } from "../context/auth/AuthContextProvider";
 
 function Navbar({
   isSidebarCollapsed,
@@ -18,6 +19,8 @@ function Navbar({
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const { user } = useAuthContext();
 
   return (
     <div
@@ -80,9 +83,15 @@ function Navbar({
         <div
           className={`${
             isSearchFocused ? "hidden lg:block" : "block"
-          } rounded-full h-9 w-9 border border-gray-100 `}
+          } h-9 w-9 overflow-hidden rounded-full border border-gray-100`}
           onClick={() => setIsAvatarMenuOpen((prev) => !prev)}
-        ></div>
+        >
+          <img
+            src={user.avatar}
+            alt="user-avatar"
+            className={`h-full w-full object-cover`}
+          />
+        </div>
 
         <div
           className={`${isAvatarMenuOpen ? "absolute" : "hidden"} right-0 top-11 z-50 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60 transition-transform duration-200 ease-in-out`}
@@ -91,7 +100,7 @@ function Navbar({
             <div
               className={`border-b border-gray-200 px-3 pb-2.5 pt-1.5 text-[14px] font-semibold text-gray-800`}
             >
-              React Patterns
+              {user.fullName}
             </div>
             <Link
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 mt-1 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
