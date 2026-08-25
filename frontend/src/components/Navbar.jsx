@@ -9,6 +9,8 @@ import { LuLayoutDashboard } from "react-icons/lu";
 import { LuSettings } from "react-icons/lu";
 import { FiLogOut } from "react-icons/fi";
 import { useAuthContext } from "../context/auth/AuthContextProvider";
+import useAuth from "../hooks/useAuth";
+import LogoutModal from "./LogoutModal";
 
 function Navbar({
   isSidebarCollapsed,
@@ -18,9 +20,16 @@ function Navbar({
 }) {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const { user } = useAuthContext();
+  const { logout, loading } = useAuth();
+
+  const openLogoutModal = () => {
+    setIsAvatarMenuOpen(false);
+    setIsLogoutModalOpen(true);
+  };
 
   return (
     <div
@@ -121,15 +130,24 @@ function Navbar({
               <span className={`text-[14px]`}>Settings</span>
             </Link>
             <div className={`my-1 border-t border-gray-200`}></div>
-            <Link
+            <button
+              type="button"
+              onClick={openLogoutModal}
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
             >
               <FiLogOut className={`text-[15.5px]`} />
               <span className={`text-[14px]`}>Log out</span>
-            </Link>
+            </button>
           </div>
         </div>
       </div>
+
+      <LogoutModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={logout}
+        loading={loading}
+      />
     </div>
   );
 }
