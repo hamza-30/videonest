@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { BiHomeAlt } from "react-icons/bi";
 import { AiOutlineLike } from "react-icons/ai";
 import { MdOutlineHistory } from "react-icons/md";
@@ -38,9 +38,12 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
   }, [isCollapsed, isMobileOpen]);
 
   const showLabels = isMobileOpen || areLabelsVisible;
-  const linkClassName = `flex items-center bg-white border border-gray-200 rounded-xl h-10 text-[0.92rem] transition-all duration-200 ${
-    showLabels ? "w-full gap-x-3 pl-3" : "w-11 justify-center"
-  }`;
+  const linkClassName = ({ isActive }) =>
+    `flex items-center border rounded-xl h-10 text-[0.92rem] transition-all duration-200 ${
+      isActive
+        ? "bg-[#f1edfc] border-[#8132e5]/20 text-[#8132e5]"
+        : "bg-white border-gray-200 hover:bg-gray-50"
+    } ${showLabels ? "w-full gap-x-3 pl-3" : "w-11 justify-center"}`;
   const labelClassName = `mt-0.75 overflow-hidden whitespace-nowrap transition-all duration-150 ${
     showLabels
       ? "max-w-40 translate-x-0 opacity-100"
@@ -58,42 +61,66 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
         aria-label="Close navigation"
       />
       <div
-        className={`fixed inset-y-0 top-16 z-40 flex h-[calc(100vh-4rem)] w-64 shrink-0 flex-col justify-between bg-[#f5f5f5] border-r border-gray-200 p-3 transition-transform duration-200 lg:static lg:z-auto lg:flex lg:transition-[width] lg:duration-200 ${
+        className={`fixed inset-y-0 top-16 z-40 flex h-[calc(100vh-4rem)] w-64 shrink-0 flex-col justify-between bg-[#f5f5f58f] border-r border-gray-200 p-3 transition-transform duration-200 lg:static lg:z-auto lg:flex lg:transition-[width] lg:duration-200 ${
           isMobileOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 ${isSidebarWidthCollapsed ? "lg:w-17" : "lg:w-59"}`}
       >
         <div className={`flex flex-col gap-y-2`}>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          <NavLink to="/" end className={linkClassName} onClick={onCloseMobile}>
             <BiHomeAlt className={`text-lg`} />
             <span className={labelClassName}>Home</span>
-          </Link>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          </NavLink>
+          <NavLink
+            to="/liked-videos"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <AiOutlineLike className={`text-lg`} />
             <span className={labelClassName}>Liked Videos</span>
-          </Link>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          </NavLink>
+          <NavLink
+            to="/history"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <MdOutlineHistory className={`text-lg`} />
             <span className={labelClassName}>History</span>
-          </Link>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          </NavLink>
+          <NavLink
+            to="/my-content"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <FaRegFolder className={`text-[16px]`} />
             <span className={labelClassName}>My Content</span>
-          </Link>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          </NavLink>
+          <NavLink
+            to="/collections"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <LuVideo className={`text-lg`} />
             <span className={labelClassName}>Collections</span>
-          </Link>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          </NavLink>
+          <NavLink
+            to="/subscribers"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <FiUsers className={`text-[16px]`} />
             <span className={labelClassName}>Subscribers</span>
-          </Link>
+          </NavLink>
         </div>
 
         <div>
-          <Link className={linkClassName} onClick={onCloseMobile}>
+          <NavLink
+            to="/settings"
+            className={linkClassName}
+            onClick={onCloseMobile}
+          >
             <IoSettingsOutline className={`text-[16px]`} />
             <span className={labelClassName}>Settings</span>
-          </Link>
+          </NavLink>
         </div>
       </div>
     </>
