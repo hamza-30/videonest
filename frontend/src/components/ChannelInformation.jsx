@@ -34,11 +34,11 @@ function ChannelInformation({ username }) {
       <div className={`h-48 min-w-full`}>
         {channelloading ? (
           <div
-            className={`relative h-full w-full overflow-hidden bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse`}
+            className={`relative h-full w-full overflow-hidden bg-linear-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse`}
             role="status"
             aria-label="Loading channel cover"
           >
-            <div className="absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/60 to-transparent animate-[shimmer_1.8s_ease-in-out_infinite]" />
+            <div className="absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-linear-to-r from-transparent via-white/60 to-transparent animate-[shimmer_1.8s_ease-in-out_infinite]" />
           </div>
         ) : channelError ? (
           <div className="flex h-full items-center justify-center text-sm text-red-600">
@@ -54,11 +54,11 @@ function ChannelInformation({ username }) {
       </div>
 
       {!channelloading && channel && (
-        <div className="relative flex flex-col items-stretch gap-4 border-b border-slate-200 px-4 pb-5 pt-20 sm:flex-row sm:items-center sm:px-8 sm:py-5 sm:pl-35   ">
+        <div className="relative flex flex-col items-stretch gap-4 px-4 pb-5 pt-20 sm:flex-row sm:items-center sm:px-8 sm:py-5 sm:pl-35">
           <img
             src={channel.avatar}
             alt={`${channel.username} avatar`}
-            className="absolute -top-[38px] left-3 z-10 h-28 w-28 rounded-full border-4 border-white object-cover shadow-md sm:left-5"
+            className="absolute -top-9.5 left-3 z-10 h-28 w-28 rounded-full border-4 border-white object-cover shadow-md sm:left-5"
           />
           <div className="min-w-0 sm:flex-1">
             <h1 className="truncate text-xl font-bold text-slate-900">
