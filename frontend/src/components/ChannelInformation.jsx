@@ -54,7 +54,7 @@ function ChannelInformation({ username }) {
       </div>
 
       {!channelloading && channel && (
-        <div className="relative flex flex-col items-stretch gap-4 border-b border-slate-200 px-4 pb-5 pt-20 sm:flex-row sm:items-center sm:px-8 sm:py-5 sm:pl-35   ">
+        <div className="relative flex flex-col items-stretch gap-4 px-4 pb-5 pt-20 sm:flex-row sm:items-center sm:px-8 sm:py-5 sm:pl-35">
           <img
             src={channel.avatar}
             alt={`${channel.username} avatar`}
