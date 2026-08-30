@@ -5,7 +5,10 @@ import { formatViews } from "../utils/formatViews";
 
 function VideoCard({ video }) {
   return (
-    <div className="flex min-w-0 w-full flex-col gap-y-3 rounded-xl p-2 transition-colors duration-200 ease-out hover:bg-[#8032e525]">
+    <Link
+      to={`/watch/${video._id}`}
+      className="flex min-w-0 w-full flex-col gap-y-3 rounded-xl p-2 transition-colors duration-200 ease-out hover:bg-[#8032e525]"
+    >
       <div
         className={`relative border border-gray-200 h-55 rounded-2xl overflow-hidden`}
       >
@@ -47,7 +50,7 @@ function VideoCard({ video }) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
