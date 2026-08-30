@@ -26,7 +26,7 @@ function VideoCard({ video }) {
           className={`h-9.5 w-9.5 border border-gray-200 rounded-full overflow-hidden`}
         >
           <img
-            src={video.avatar}
+            src={video.owner.avatar}
             alt="avatar"
             className={`w-full h-full object-cover`}
           />
