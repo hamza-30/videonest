@@ -1,16 +1,42 @@
 import { useParams } from "react-router-dom";
 import ChannelInformation from "../components/ChannelInformation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { channelService } from "../services/channelService";
 
 function Channel() {
   const { username } = useParams();
   const [activeTab, setActiveTab] = useState("Videos");
+  const [channel, setChannel] = useState(null);
+  const [channelLoading, setChannelLoading] = useState(true);
+  const [channelError, setChannelError] = useState(null);
+
+  useEffect(() => {
+    const getChannel = async () => {
+      setChannelLoading(true);
+      setChannelError(null);
+      try {
+        const response = await channelService.getUserChannel(username);
+        setChannel(response.data);
+      } catch (error) {
+        setChannelError(error);
+      } finally {
+        setChannelLoading(false);
+      }
+    };
+
+    getChannel();
+  }, [username]);
 
   const tabs = ["Videos", "Playlists", "Tweets", "Subscribed"];
 
   return (
     <div>
-      <ChannelInformation username={username} />
+      <ChannelInformation
+        channel={channel}
+        loading={channelLoading}
+        error={channelError}
+        setChannel={setChannel}
+      />
       <div className="px-4 sm:px-8">
         <div
           role="tablist"

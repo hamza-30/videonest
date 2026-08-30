@@ -1,38 +1,17 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { channelService } from "../services/channelService";
 import { useAuthContext } from "../context/auth/AuthContextProvider";
+import { useState } from "react";
 
-function ChannelInformation({ username }) {
-  const [channel, setChannel] = useState(null);
-  const [channelError, setChannelError] = useState(null);
-  const [channelloading, setChannelLoading] = useState(true);
+function ChannelInformation({ channel, loading, error, setChannel }) {
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
   const { user } = useAuthContext();
-
-  useEffect(() => {
-    const getChannel = async () => {
-      setChannelLoading(true);
-      setChannelError(null);
-      try {
-        const response = await channelService.getUserChannel(username);
-        setChannel(response.data);
-        console.log(response.data);
-      } catch (error) {
-        setChannelError(error);
-      } finally {
-        setChannelLoading(false);
-      }
-    };
-
-    getChannel();
-  }, [username]);
 
   return (
     <div>
       <div className={`h-48 min-w-full`}>
-        {channelloading ? (
+        {loading ? (
           <div
             className={`relative h-full w-full overflow-hidden bg-linear-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse`}
             role="status"
@@ -40,9 +19,9 @@ function ChannelInformation({ username }) {
           >
             <div className="absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-linear-to-r from-transparent via-white/60 to-transparent animate-[shimmer_1.8s_ease-in-out_infinite]" />
           </div>
-        ) : channelError ? (
+        ) : error ? (
           <div className="flex h-full items-center justify-center text-sm text-red-600">
-            {channelError.message || "Unable to load channel"}
+            {error.message || "Unable to load channel"}
           </div>
         ) : channel ? (
           <img
@@ -53,7 +32,7 @@ function ChannelInformation({ username }) {
         ) : null}
       </div>
 
-      {!channelloading && channel && (
+      {!loading && channel && (
         <div className="relative flex flex-col items-stretch gap-4 px-4 pb-5 pt-20 sm:flex-row sm:items-center sm:px-8 sm:py-5 sm:pl-35">
           <img
             src={channel.avatar}
