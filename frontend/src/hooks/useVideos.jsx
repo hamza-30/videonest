@@ -3,7 +3,7 @@ import { videoService } from "../services/videoService";
 
 function useVideos(channelId) {
   const [videos, setVideos] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const getChannelVideos = async () => {
