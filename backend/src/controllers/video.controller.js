@@ -39,6 +39,20 @@ const getAllVideos = asyncHandler(async (req, res) => {
   sortStage[sortBy] = parseInt(sortType);
   pipeline.push({ $sort: sortStage });
 
+  pipeline.push({
+    $lookup: {
+      from: "users",
+      localField: "owner",
+      foreignField: "_id",
+      as: "owner",
+      pipeline: [
+        { $project: { username: 1, fullName: 1, avatar: 1 } },
+      ],
+    },
+  });
+
+  pipeline.push({ $unwind: "$owner" });
+
   const options = {
     page: parseInt(page),
     limit: parseInt(limit),
