@@ -1,7 +1,9 @@
 import { useParams } from "react-router-dom";
+import { RiErrorWarningLine } from "react-icons/ri";
 import ChannelInformation from "../components/ChannelInformation";
 import { useState, useEffect } from "react";
 import { channelService } from "../services/channelService";
+import VideosSection from "../components/VideosSection";
 
 function Channel() {
   const { username } = useParams();
@@ -28,6 +30,24 @@ function Channel() {
   }, [username]);
 
   const tabs = ["Videos", "Playlists", "Tweets", "Subscribed"];
+
+  if (!channelLoading && channelError) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4 px-4 sm:px-8 text-center relative bottom-10">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-slate-100">
+          <RiErrorWarningLine className="h-10 w-10 text-slate-400" />
+        </div>
+        <div>
+          <p className="text-base font-semibold text-slate-800">
+            {channelError.message || "Something went wrong"}
+          </p>
+          <p className="mt-1 text-sm text-slate-500">
+            Please try again or check the URL.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -65,6 +85,7 @@ function Channel() {
           })}
         </div>
       </div>
+      {activeTab == "Videos" && <VideosSection channelId={channel?._id} />}
     </div>
   );
 }
