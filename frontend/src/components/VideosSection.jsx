@@ -5,7 +5,14 @@ import VideoCardSkeleton from "./VideoCardSkeleton";
 import { RiVideoOffLine } from "react-icons/ri";
 
 function VideosSection({ channelId }) {
-  const { getChannelVideos, videos, loading } = useVideos(channelId);
+  const {
+    getChannelVideos,
+    videos,
+    isFetchingMore,
+    hasNextPage,
+    fetchNextPage,
+    loading,
+  } = useVideos(channelId);
 
   useEffect(() => {
     if (!channelId) return;
@@ -35,11 +42,27 @@ function VideosSection({ channelId }) {
   }
 
   return (
-    <div className="grid w-full min-w-0 grid-cols-1 items-start gap-5 px-4 py-6 sm:grid-cols-2 sm:gap-3 sm:px-8 lg:grid-cols-3 xl:grid-cols-4">
-      {loading
-        ? Array.from({ length: 3 }).map((_, i) => <VideoCardSkeleton key={i} />)
-        : videos.map((video, index) => <VideoCard key={index} video={video} />)}
-    </div>
+    <>
+      <div className="grid w-full min-w-0 grid-cols-1 items-start gap-5 px-4 py-6 sm:grid-cols-2 sm:gap-3 sm:px-8 lg:grid-cols-3 xl:grid-cols-4">
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <VideoCardSkeleton key={i} />
+            ))
+          : videos.map((video) => <VideoCard key={video._id} video={video} />)}
+      </div>
+
+      {hasNextPage && !loading && (
+        <div className="flex justify-center pb-8">
+          <button
+            onClick={fetchNextPage}
+            disabled={isFetchingMore}
+            className="rounded-lg border border-[#8132e5] px-6 py-2 text-sm font-medium text-[#8132e5] transition-colors hover:bg-[#8132e5] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isFetchingMore ? "Loading..." : "Load More"}
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 
