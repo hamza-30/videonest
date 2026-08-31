@@ -35,7 +35,7 @@ function VideosSection({ channelId }) {
   }
 
   return (
-    <div className="grid w-full min-w-0 grid-cols-1 items-start gap-5 px-4 py-6 sm:grid-cols-2 sm:gap-3 sm:px-8 lg:grid-cols-3">
+    <div className="grid w-full min-w-0 grid-cols-1 items-start gap-5 px-4 py-6 sm:grid-cols-2 sm:gap-3 sm:px-8 lg:grid-cols-3 xl:grid-cols-4">
       {loading
         ? Array.from({ length: 3 }).map((_, i) => <VideoCardSkeleton key={i} />)
         : videos.map((video, index) => <VideoCard key={index} video={video} />)}
