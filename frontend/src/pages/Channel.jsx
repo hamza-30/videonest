@@ -85,7 +85,10 @@ function Channel() {
           })}
         </div>
       </div>
-      {activeTab == "Videos" && <VideosSection channelId={channel?._id} />}
+
+      <div className={activeTab == "Videos" ? "block" : "hidden"}>
+        <VideosSection channelId={channel?._id} />
+      </div>
     </div>
   );
 }
