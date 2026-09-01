@@ -4,6 +4,7 @@ import ChannelInformation from "../components/ChannelInformation";
 import { useState, useEffect } from "react";
 import { channelService } from "../services/channelService";
 import VideosSection from "../components/VideosSection";
+import PlaylistSection from "../components/PlaylistSection";
 
 function Channel() {
   const { username } = useParams();
@@ -88,6 +89,10 @@ function Channel() {
 
       <div className={activeTab == "Videos" ? "block" : "hidden"}>
         <VideosSection channelId={channel?._id} />
+      </div>
+
+      <div className={activeTab == "Playlists" ? "block" : "hidden"}>
+        <PlaylistSection channelId={channel?._id} />
       </div>
     </div>
   );
