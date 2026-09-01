@@ -26,12 +26,36 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
   const { userId } = req.params;
-  //TODO: get user playlists
+
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid User ID");
   }
 
-  const playlists = await Playlist.find({ owner: userId });
+  const playlists = await Playlist.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "videos",
+        foreignField: "_id",
+        as: "videos",
+      },
+    },
+    {
+      $project: {
+        name: 1,
+        description: 1,
+        videoCount: { $size: "$videos" },
+        thumbnail: { $arrayElemAt: ["$videos.thumbnail", 0] },
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    },
+  ]);
 
   return res
     .status(200)
