@@ -2,7 +2,7 @@ import { useState, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { subscriptionService } from "../services/subscriptionService";
-import { formatViews } from "../utils/formatViews";
+import { formatCompactNumber } from "../utils/formatCompactNumber";
 
 function SubscribedChannelCard({ channel }) {
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ function SubscribedChannelCard({ channel }) {
             @{channel?.username}
           </p>
           <p className="mt-0.5 text-xs text-slate-500">
-            {formatViews(subscribersCount)}{" "}
+            {formatCompactNumber(subscribersCount)}{" "}
             {subscribersCount === 1 ? "subscriber" : "subscribers"}
           </p>
         </div>

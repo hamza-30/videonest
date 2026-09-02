@@ -2,7 +2,7 @@ import { memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { formatDuration } from "../utils/formatDuration";
-import { formatViews } from "../utils/formatViews";
+import { formatCompactNumber } from "../utils/formatCompactNumber";
 
 function VideoCard({ video }) {
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ function VideoCard({ video }) {
             {video.owner?.fullName}
           </Link>
           <div className="text-sm text-gray-600">
-            <span>{formatViews(video.views)} views</span>
+            <span>{formatCompactNumber(video.views)} views</span>
             <span className="mx-1">•</span>
             <span>{formatTimeAgo(video.createdAt)} </span>
           </div>
