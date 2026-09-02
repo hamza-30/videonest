@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { channelService } from "../services/channelService";
 import { useAuthContext } from "../context/auth/AuthContextProvider";
 import { useState } from "react";
+import { formatCompactNumber } from "../utils/formatCompactNumber";
 
 function ChannelInformation({ channel, loading, error, setChannel }) {
   const [subscriptionLoading, setSubscriptionLoading] = useState(false);
@@ -64,13 +65,13 @@ function ChannelInformation({ channel, loading, error, setChannel }) {
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-600">
                 <span>
                   <strong className="text-slate-900">
-                    {channel.subscribersCount}
+                    {formatCompactNumber(channel.subscribersCount)}
                   </strong>{" "}
                   subscribers
                 </span>
                 <span>
                   <strong className="text-slate-900">
-                    {channel.channelsSubscribedToCount}
+                    {formatCompactNumber(channel.channelsSubscribedToCount)}
                   </strong>{" "}
                   subscribed
                 </span>
