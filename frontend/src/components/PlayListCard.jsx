@@ -1,10 +1,11 @@
 import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { RiPlayListLine } from "react-icons/ri";
+import { formatTimeAgo } from "../utils/formatTimeAgo";
 
 function PlayListCard({ playlist }) {
   const navigate = useNavigate();
-  const { thumbnail, videoCount = 0 } = playlist;
+  const { thumbnail, videoCount = 0, createdAt } = playlist;
 
   return (
     <div
@@ -46,9 +47,11 @@ function PlayListCard({ playlist }) {
             {playlist.description}
           </p>
         )}
-        <p className="mt-1.5 text-xs font-medium text-[#8132e5]">
-          View full playlist
-        </p>
+        {createdAt && (
+          <p className="mt-1 text-sm text-gray-500">
+            {formatTimeAgo(createdAt)}
+          </p>
+        )}
       </div>
     </div>
   );
