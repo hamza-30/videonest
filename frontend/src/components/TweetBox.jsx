@@ -1,15 +1,10 @@
 import { useRef, useEffect, useState } from "react";
-import { RiEmotionLine } from "react-icons/ri";
-import { EMOJI_CATEGORIES } from "../constants/emojis";
+import EmojiPicker from "./EmojiPicker";
 
 function TweetBox({ user, addTweet }) {
   const [content, setContent] = useState("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(0);
-
+  const [isPosting, setIsPosting] = useState(false);
   const textareaRef = useRef(null);
-  const emojiPickerRef = useRef(null);
-  const emojiButtonRef = useRef(null);
 
   // Auto-resize the textarea based on content
   useEffect(() => {
@@ -21,35 +16,6 @@ function TweetBox({ user, addTweet }) {
       )}px`;
     }
   }, [content]);
-
-  // Close emoji picker on outside click or escape key
-  useEffect(() => {
-    if (!showEmojiPicker) return;
-
-    const handleClickOutside = (e) => {
-      if (
-        emojiPickerRef.current &&
-        !emojiPickerRef.current.contains(e.target) &&
-        emojiButtonRef.current &&
-        !emojiButtonRef.current.contains(e.target)
-      ) {
-        setShowEmojiPicker(false);
-      }
-    };
-
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setShowEmojiPicker(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [showEmojiPicker]);
 
   const handleEmojiSelect = (emoji) => {
     const textarea = textareaRef.current;
@@ -72,8 +38,6 @@ function TweetBox({ user, addTweet }) {
     });
   };
 
-  const [isPosting, setIsPosting] = useState(false);
-
   const handlePostSubmit = async () => {
     if (!content.trim() || isPosting) return;
 
@@ -82,7 +46,6 @@ function TweetBox({ user, addTweet }) {
       const success = await addTweet(content);
       if (success) {
         setContent("");
-        setShowEmojiPicker(false);
       }
     } finally {
       setIsPosting(false);
@@ -121,70 +84,8 @@ function TweetBox({ user, addTweet }) {
 
           {/* Right side actions */}
           <div className="flex items-center gap-2">
-            {/* Emoji Menu Trigger & Popover */}
-            <div className="relative">
-              <button
-                ref={emojiButtonRef}
-                type="button"
-                onClick={() => setShowEmojiPicker((prev) => !prev)}
-                className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${
-                  showEmojiPicker
-                    ? "bg-[#8132e5]/10 text-[#8132e5]"
-                    : "text-[#8132e5] hover:bg-[#8132e5]/10"
-                }`}
-                aria-label="Add emoji"
-                aria-expanded={showEmojiPicker}
-              >
-                <RiEmotionLine className="h-5.5 w-5.5" />
-              </button>
-
-              {showEmojiPicker && (
-                <div
-                  ref={emojiPickerRef}
-                  className="absolute bottom-full right-0 mb-3 z-50 w-72 sm:w-80 rounded-2xl border border-gray-200 bg-white p-2.5 shadow-xl shadow-slate-300/40"
-                >
-                  {/* Category Switcher Tabs (9 Global Unicode Categories) */}
-                  <div className="flex items-center justify-between gap-1 border-b border-gray-100 pb-2 mb-2 px-1">
-                    {EMOJI_CATEGORIES.map((cat, idx) => (
-                      <button
-                        key={cat.id}
-                        type="button"
-                        title={cat.name}
-                        onClick={() => setActiveCategory(idx)}
-                        className={`flex h-7 w-7 items-center justify-center rounded-lg text-sm transition-all cursor-pointer ${
-                          activeCategory === idx
-                            ? "bg-[#8132e5]/15 scale-110"
-                            : "hover:bg-gray-100 opacity-60 hover:opacity-100"
-                        }`}
-                      >
-                        {cat.icon}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Active Category Title */}
-                  <div className="px-1 mb-1.5 flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                      {EMOJI_CATEGORIES[activeCategory].name}
-                    </span>
-                  </div>
-
-                  {/* Emoji Grid */}
-                  <div className="grid grid-cols-7 sm:grid-cols-8 gap-1 overflow-y-auto max-h-48 p-1">
-                    {EMOJI_CATEGORIES[activeCategory].emojis.map((emoji, i) => (
-                      <button
-                        key={i}
-                        type="button"
-                        onClick={() => handleEmojiSelect(emoji)}
-                        className="flex h-8 w-8 items-center justify-center rounded-lg text-lg transition-transform hover:scale-125 hover:bg-gray-100 active:scale-95 cursor-pointer select-none"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            {/* Reusable Emoji Picker */}
+            <EmojiPicker onSelectEmoji={handleEmojiSelect} />
 
             <button
               type="button"
