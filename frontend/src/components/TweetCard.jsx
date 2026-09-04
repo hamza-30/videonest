@@ -10,6 +10,7 @@ import {
 } from "react-icons/ri";
 import DeleteModal from "./DeleteModal";
 import EmojiPicker from "./EmojiPicker";
+import { likeService } from "../services/likeService";
 
 function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -20,6 +21,15 @@ function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(tweet?.content || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [likesCount, setLikesCount] = useState(tweet?.likesCount ?? 0);
+  const [isLiked, setIsLiked] = useState(Boolean(tweet?.isLiked));
+  const [isLiking, setIsLiking] = useState(false);
+
+  // Sync likes state when tweet prop updates
+  useEffect(() => {
+    setLikesCount(tweet?.likesCount ?? 0);
+    setIsLiked(Boolean(tweet?.isLiked));
+  }, [tweet?.likesCount, tweet?.isLiked]);
 
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -27,9 +37,6 @@ function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
 
   const authorName = channel?.fullName;
   const authorAvatar = channel?.avatar;
-
-  const likesCount = tweet?.likesCount ?? 0;
-  const isLiked = Boolean(tweet?.isLiked);
 
   // Focus and auto-resize textarea when entering edit mode
   useEffect(() => {
@@ -138,6 +145,28 @@ function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
     }
   };
 
+  const handleLikeButtonClick = async () => {
+    if (isLiking || !tweet?._id) return;
+
+    const prevIsLiked = isLiked;
+    const prevLikesCount = likesCount;
+
+    // Optimistic UI update
+    setIsLiked(!prevIsLiked);
+    setLikesCount((prev) => (prevIsLiked ? Math.max(0, prev - 1) : prev + 1));
+
+    try {
+      setIsLiking(true);
+      await likeService.toggleTweetLike(tweet._id);
+    } catch (error) {
+      // Roll back to previous state if API fails
+      setIsLiked(prevIsLiked);
+      setLikesCount(prevLikesCount);
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
   return (
     <div className="flex gap-3 border-b border-gray-200 px-4 py-3 transition-colors hover:bg-slate-50/60 sm:px-8">
       {/* Left: Author Avatar */}
@@ -222,6 +251,8 @@ function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
             <div className="mt-1.5 flex items-center">
               <button
                 type="button"
+                onClick={handleLikeButtonClick}
+                disabled={isLiking}
                 className="group -ml-1.5 flex items-center gap-1 rounded-full px-1.5 py-0.5 text-xs text-slate-500 transition-colors hover:text-[#8132e5] cursor-pointer"
               >
                 <div className="flex h-6 w-6 items-center justify-center rounded-full transition-colors group-hover:bg-[#8132e5]/10">
