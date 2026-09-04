@@ -31,7 +31,35 @@ const getUserTweets = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid User ID");
   }
 
-  const tweets = await Tweet.find({ owner: userId }).sort({ createdAt: -1 });
+  // const tweets = await Tweet.find({ owner: userId }).sort({ createdAt: -1 });
+  const tweets = await Tweet.aggregate([
+    {
+      $match: {
+        owner: new mongoose.Types.ObjectId(userId),
+      },
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "tweet",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likesCount: { $size: "$likes" },
+        isLiked: {
+          $in: [new mongoose.Types.ObjectId(userId), "$likes.likedBy"],
+        },
+      },
+    },
+    {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+  ]);
 
   return res
     .status(200)
