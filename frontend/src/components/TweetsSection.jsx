@@ -3,6 +3,7 @@ import { useAuthContext } from "../context/auth/AuthContextProvider";
 import useTweets from "../hooks/useTweets";
 import { useEffect } from "react";
 import TweetCard from "./TweetCard";
+import TweetCardSkeleton from "./TweetCardSkeleton";
 
 function TweetsSection({ channel }) {
   const { user } = useAuthContext();
@@ -32,6 +33,11 @@ function TweetsSection({ channel }) {
   return (
     <>
       <div>{isOwner && <TweetBox user={user} addTweet={addTweet} />}</div>
+
+      {loading &&
+        Array.from({ length: 3 }).map((_, i) => (
+          <TweetCardSkeleton key={i} />
+        ))}
 
       {!loading &&
         tweets.length > 0 &&
