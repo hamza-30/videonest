@@ -31,9 +31,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid User ID");
   }
 
-  const tweets = await Tweet.find({
-    owner: req.user._id,
-  });
+  const tweets = await Tweet.find({ owner: userId }).sort({ createdAt: -1 });
 
   return res
     .status(200)
