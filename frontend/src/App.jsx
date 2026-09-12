@@ -4,18 +4,13 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Watch from "./pages/Watch";
 import Channel from "./pages/Channel";
-import Playlists from "./pages/Playlists";
 import PlaylistDetails from "./pages/PlaylistDetails";
-import ChannelTweets from "./pages/ChannelTweets";
-import Following from "./pages/Following";
 import LikedVideos from "./pages/LikedVideos";
 import History from "./pages/History";
 import MyContent from "./pages/MyContent";
 import Collections from "./pages/Collections";
 import Subscribers from "./pages/Subscribers";
-import EditProfile from "./pages/EditProfile";
 import EditChannel from "./pages/EditChannel";
-import ChangePassword from "./pages/ChangePassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
@@ -55,20 +50,8 @@ export const router = createBrowserRouter([
             element: <Channel />,
           },
           {
-            path: "channel/:userId/playlists",
-            element: <Playlists />,
-          },
-          {
             path: "channel/:playlistId/playlist",
             element: <PlaylistDetails />,
-          },
-          {
-            path: "channel/:userId/tweets",
-            element: <ChannelTweets />,
-          },
-          {
-            path: "subscriptions/:subscriberId",
-            element: <Following />,
           },
           {
             path: "liked-videos",
@@ -95,16 +78,8 @@ export const router = createBrowserRouter([
             element: <Settings />,
           },
           {
-            path: "edit-profile",
-            element: <EditProfile />,
-          },
-          {
             path: "edit-channel",
             element: <EditChannel />,
-          },
-          {
-            path: "change-password",
-            element: <ChangePassword />,
           },
           {
             path: "dashboard",
