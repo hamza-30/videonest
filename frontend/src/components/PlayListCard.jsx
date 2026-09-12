@@ -9,7 +9,7 @@ function PlayListCard({ playlist }) {
 
   return (
     <div
-      onClick={() => navigate(`/playlist/${playlist._id}`)}
+      onClick={() => navigate(`/channel/${playlist._id}/playlist`)}
       className="flex min-w-0 w-full cursor-pointer flex-col gap-y-3 rounded-xl p-2 transition-colors duration-200 ease-out hover:bg-[#8032e525]"
     >
       {/* Thumbnail */}
