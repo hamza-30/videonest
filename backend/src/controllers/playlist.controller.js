@@ -104,6 +104,8 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         "owner.username": 1,
         "owner.fullName": 1,
         "owner.avatar": 1,
+        createdAt: 1,
+        updatedAt: 1,
       },
     },
   ]);
