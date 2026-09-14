@@ -19,5 +19,5 @@ export const playlistService = {
     apiClient.patch(`/api/v1/playlists/add/${videoId}/${playlistId}`),
 
   removeVideoFromPlaylist: (videoId, playlistId) =>
-    apiClient.patch(`/api/v1/playlists/add/${videoId}/${playlistId}`),
+    apiClient.patch(`/api/v1/playlists/remove/${videoId}/${playlistId}`),
 };
