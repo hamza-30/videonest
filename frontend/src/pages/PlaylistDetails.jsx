@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DeleteModal from "../components/DeleteModal";
 import PlaylistVideoCard from "../components/PlaylistVideoCard";
+import PlaylistDetailsSkeleton from "../components/PlaylistDetailsSkeleton";
 import {
   RiMoreLine,
   RiPencilLine,
@@ -148,7 +149,7 @@ function PlaylistDetails() {
   };
 
   if (loading || !playlist) {
-    return "Loading...";
+    return <PlaylistDetailsSkeleton />;
   }
 
   const isOwner = user?._id === playlist.owner._id;
