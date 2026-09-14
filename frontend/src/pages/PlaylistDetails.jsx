@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import DeleteModal from "../components/DeleteModal";
+import PlaylistVideoCard from "../components/PlaylistVideoCard";
 import {
   RiMoreLine,
   RiPencilLine,
@@ -129,6 +130,20 @@ function PlaylistDetails() {
     } catch (err) {
       toast.error(err.message || "Failed to delete playlist");
       setDeleting(false);
+    }
+  };
+
+  const handleRemoveVideo = async (videoId) => {
+    // Optimistic UI update
+    const previousVideos = [...videos];
+    setVideos((prev) => prev.filter((v) => v._id !== videoId));
+
+    try {
+      await playlistService.removeVideoFromPlaylist(videoId, playlistId);
+      toast.success("Video removed from playlist");
+    } catch (err) {
+      setVideos(previousVideos);
+      toast.error(err.message || "Failed to remove video");
     }
   };
 
@@ -281,6 +296,23 @@ function PlaylistDetails() {
             <span>Updated {formatTimeAgo(playlist.updatedAt)}</span>
           </div>
         </div>
+      </div>
+
+      {/* Videos List */}
+      <div className="mt-6 flex flex-col gap-2">
+        {videos.map((video) => (
+          <PlaylistVideoCard
+            key={video._id}
+            video={video}
+            isOwner={isOwner}
+            onRemove={handleRemoveVideo}
+          />
+        ))}
+        {videos.length === 0 && (
+          <div className="text-center text-gray-500 py-10">
+            No videos in this playlist yet.
+          </div>
+        )}
       </div>
       <DeleteModal
         isOpen={showDeleteModal}
