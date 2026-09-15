@@ -38,6 +38,11 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
       },
     },
     {
+      $addFields: {
+        videoIds: "$videos",
+      },
+    },
+    {
       $lookup: {
         from: "videos",
         localField: "videos",
@@ -50,6 +55,7 @@ const getUserPlaylists = asyncHandler(async (req, res) => {
         name: 1,
         description: 1,
         videoCount: { $size: "$videos" },
+        videoIds: 1,
         thumbnail: { $arrayElemAt: ["$videos.thumbnail", 0] },
         createdAt: 1,
         updatedAt: 1,
