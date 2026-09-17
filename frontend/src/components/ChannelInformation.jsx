@@ -21,15 +21,19 @@ function ChannelInformation({ channel, loading, error, setChannel }) {
             <div className="absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-linear-to-r from-transparent via-white/60 to-transparent animate-[shimmer_1.8s_ease-in-out_infinite]" />
           </div>
         ) : error ? (
-          <div className="flex h-full items-center justify-center text-sm text-red-600">
+          <div className="flex h-full items-center justify-center text-sm text-red-600 bg-slate-100">
             {error.message || "Unable to load channel"}
           </div>
-        ) : channel ? (
+        ) : channel?.coverImage ? (
           <img
             src={channel.coverImage}
             alt="cover-image"
-            className={`h-full w-full object-cover`}
+            className="h-full w-full object-cover"
           />
+        ) : channel ? (
+          <div className="h-full w-full bg-slate-200 flex items-center justify-center">
+            {/* Optional: you could add an icon or leave it blank */}
+          </div>
         ) : null}
       </div>
 
@@ -107,7 +111,11 @@ function ChannelInformation({ channel, loading, error, setChannel }) {
                     setSubscriptionLoading(false);
                   }
                 }}
-                className="w-full shrink-0 rounded-lg bg-red-600 px-4 py-2 text-center text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                className={`w-full shrink-0 rounded-lg px-4 py-2 text-center text-sm font-semibold text-white transition disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto ${
+                  channel.isSubscribed
+                    ? "bg-gray-500 hover:bg-gray-600"
+                    : "bg-[#8132e5] hover:bg-[#6e28c8]"
+                }`}
               >
                 {subscriptionLoading
                   ? "Updating..."
