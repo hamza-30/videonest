@@ -111,17 +111,6 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
             <span className={labelClassName}>Subscribers</span>
           </NavLink>
         </div>
-
-        <div>
-          <NavLink
-            to="/settings"
-            className={linkClassName}
-            onClick={onCloseMobile}
-          >
-            <IoSettingsOutline className={`text-[16px]`} />
-            <span className={labelClassName}>Settings</span>
-          </NavLink>
-        </div>
       </div>
     </>
   );

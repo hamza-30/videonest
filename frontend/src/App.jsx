@@ -74,10 +74,6 @@ export const router = createBrowserRouter([
             element: <Subscribers />,
           },
           {
-            path: "settings",
-            element: <Settings />,
-          },
-          {
             path: "edit-channel",
             element: <EditChannel />,
           },

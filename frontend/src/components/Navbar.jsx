@@ -128,7 +128,7 @@ function Navbar({
               <span className={`text-[14px]`}>Dashboard</span>
             </Link>
             <Link
-              to={"/settings"}
+              to={"/edit-channel"}
               onClick={() => setIsAvatarMenuOpen(false)}
               className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
             >
