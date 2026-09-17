@@ -9,6 +9,8 @@ import { useAuthContext } from "../context/auth/AuthContextProvider";
 
 import WatchSkeleton from "../components/WatchSkeleton";
 
+import VideoCommentSection from "../components/VideoCommentSection";
+
 function Watch() {
   const { videoId } = useParams();
   const { user } = useAuthContext();
@@ -45,7 +47,11 @@ function Watch() {
     <div className="p-5 max-w-300 mx-auto w-full flex flex-col gap-4">
       <VideoPlayer videoUrl={video.videoFile} thumbnail={video.thumbnail} />
       <VideoDetails video={video} isOwner={isOwner} />
-      {/* Placeholder for CommentSection */}
+
+      {/* Separator line */}
+      <div className="h-px w-full bg-gray-200 my-2" />
+
+      <VideoCommentSection videoId={videoId} />
     </div>
   );
 }
