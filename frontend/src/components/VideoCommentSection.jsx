@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { RiSendPlaneFill } from "react-icons/ri";
 
 import CommentCard from "./CommentCard";
+import CommentSkeleton from "./CommentSkeleton";
 
 function VideoCommentSection({ videoId }) {
   const { user } = useAuthContext();
@@ -138,7 +139,11 @@ function VideoCommentSection({ videoId }) {
       {/* Comments List */}
       <div className="flex flex-col gap-4 mt-2">
         {loading ? (
-          <p className="text-sm text-gray-500">Loading comments...</p>
+          <>
+            <CommentSkeleton />
+            <CommentSkeleton />
+            <CommentSkeleton />
+          </>
         ) : comments.length > 0 ? (
           comments.map((comment) => (
             <CommentCard
