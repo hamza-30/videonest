@@ -50,7 +50,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
       $addFields: {
         likesCount: { $size: "$likes" },
         isLiked: {
-          $in: [new mongoose.Types.ObjectId(userId), "$likes.likedBy"],
+          $in: [req.user?._id, "$likes.likedBy"],
         },
       },
     },
