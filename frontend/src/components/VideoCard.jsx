@@ -1,13 +1,18 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { RiMore2Fill, RiPlayListAddLine } from "react-icons/ri";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  RiMore2Fill,
+  RiPlayListAddLine,
+  RiDeleteBinLine,
+} from "react-icons/ri";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { formatDuration } from "../utils/formatDuration";
 import { formatCompactNumber } from "../utils/formatCompactNumber";
 import SaveToPlaylistModal from "./SaveToPlaylistModal";
 
-function VideoCard({ video }) {
+function VideoCard({ video, onRemove }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const menuRef = useRef(null);
@@ -33,9 +38,17 @@ function VideoCard({ video }) {
   };
 
   const handleSaveToPlaylist = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     setMenuOpen(false);
     setShowPlaylistModal(true);
+  };
+
+  const handleRemoveLiked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setMenuOpen(false);
+    if (onRemove) onRemove(video._id);
   };
 
   return (
@@ -93,11 +106,20 @@ function VideoCard({ video }) {
                   <div className="absolute right-0 top-8 z-50 w-48 rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60">
                     <button
                       onClick={handleSaveToPlaylist}
-                      className="flex w-full items-center gap-2.5 rounded-[inherit] px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                      className="flex w-full items-center gap-2.5 rounded-t-xl px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
                     >
                       <RiPlayListAddLine className="text-base text-gray-400" />
                       Save to playlist
                     </button>
+                    {location.pathname === "/liked-videos" && (
+                      <button
+                        onClick={handleRemoveLiked}
+                        className="flex w-full items-center gap-2.5 rounded-b-xl px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition cursor-pointer border-t border-gray-100"
+                      >
+                        <RiDeleteBinLine className="text-base shrink-0" />
+                        Remove from liked
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
