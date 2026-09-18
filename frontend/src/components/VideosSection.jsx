@@ -10,8 +10,8 @@ function VideosSection({ channelId }) {
     videos,
     isFetchingMore,
     hasNextPage,
-    fetchNextPage,
     loading,
+    sentinelRef,
   } = useVideos(channelId);
 
   useEffect(() => {
@@ -51,16 +51,21 @@ function VideosSection({ channelId }) {
           : videos.map((video) => <VideoCard key={video._id} video={video} />)}
       </div>
 
-      {hasNextPage && !loading && (
-        <div className="flex justify-center pb-8">
-          <button
-            onClick={fetchNextPage}
-            disabled={isFetchingMore}
-            className="rounded-lg border border-[#8132e5] px-6 py-2 text-sm font-medium text-[#8132e5] transition-colors hover:bg-[#8132e5] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isFetchingMore ? "Loading..." : "Load More"}
-          </button>
+      {/* Infinite Scroll Sentinel */}
+      <div ref={sentinelRef} className="h-1" />
+
+      {/* Loading spinner shown while fetching additional pages */}
+      {isFetchingMore && (
+        <div className="flex justify-center pb-8 pt-4">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-[#8132e5]" />
         </div>
+      )}
+
+      {/* End of feed message */}
+      {!hasNextPage && !loading && videos.length > 0 && (
+        <p className="text-center text-sm text-gray-400 pb-8 pt-4">
+          You've reached the end
+        </p>
       )}
     </>
   );

@@ -72,15 +72,9 @@ function useVideos(channelId = null) {
     fetchVideos(1);
   };
 
-  const fetchNextPage = () => {
-    if (!hasNextPage || isFetchingMore) return;
-    fetchVideos(page + 1);
-  };
-
   return {
     videos,
     getChannelVideos,
-    fetchNextPage,
     hasNextPage,
     isFetchingMore,
     loading,
