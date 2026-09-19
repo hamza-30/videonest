@@ -12,7 +12,7 @@ function VideosSection({ channelId }) {
     hasNextPage,
     loading,
     sentinelRef,
-  } = useVideos(channelId);
+  } = useVideos({ userId: channelId });
 
   useEffect(() => {
     if (!channelId) return;
