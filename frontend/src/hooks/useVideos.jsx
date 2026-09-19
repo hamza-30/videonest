@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { videoService } from "../services/videoService";
 
-function useVideos(channelId = null) {
+function useVideos({ userId = null, query = null } = {}) {
   const [videos, setVideos] = useState([]);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(false);
@@ -9,7 +9,6 @@ function useVideos(channelId = null) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Step 2: A ref for the invisible sentinel div at the bottom of the list
   const sentinelRef = useRef(null);
 
   const fetchVideos = useCallback(
@@ -26,9 +25,8 @@ function useVideos(channelId = null) {
           limit: 12,
         };
 
-        // Step 1: Only pass userId if we have a channelId (channel page)
-        // If no channelId, we fetch all videos (home feed)
-        if (channelId) params.userId = channelId;
+        if (userId) params.userId = userId;
+        if (query) params.query = query;
 
         const response = await videoService.getAllVideos(params);
         const data = response.data;
@@ -44,11 +42,9 @@ function useVideos(channelId = null) {
         isFirstPage ? setLoading(false) : setIsFetchingMore(false);
       }
     },
-    [channelId]
+    [userId, query]
   );
 
-  // Step 3: Set up the IntersectionObserver to watch the sentinel div
-  // When the sentinel enters the viewport, fetch the next page automatically
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -68,9 +64,9 @@ function useVideos(channelId = null) {
     return () => observer.disconnect(); // Cleanup on unmount
   }, [hasNextPage, isFetchingMore, page, fetchVideos]);
 
-  const getChannelVideos = () => {
+  const getChannelVideos = useCallback(() => {
     fetchVideos(1);
-  };
+  }, [fetchVideos]);
 
   return {
     videos,
@@ -79,7 +75,7 @@ function useVideos(channelId = null) {
     isFetchingMore,
     loading,
     error,
-    sentinelRef, // Step 4: returned so the component can attach it to the bottom div
+    sentinelRef,
   };
 }
 
