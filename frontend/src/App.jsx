@@ -66,10 +66,6 @@ export const router = createBrowserRouter([
             element: <MyContent />,
           },
           {
-            path: "collections",
-            element: <Collections />,
-          },
-          {
             path: "subscribers",
             element: <Subscribers />,
           },

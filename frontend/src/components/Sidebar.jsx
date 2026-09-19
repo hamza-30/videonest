@@ -95,14 +95,6 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
             <span className={labelClassName}>My Content</span>
           </NavLink>
           <NavLink
-            to="/collections"
-            className={linkClassName}
-            onClick={onCloseMobile}
-          >
-            <LuVideo className={`text-lg`} />
-            <span className={labelClassName}>Collections</span>
-          </NavLink>
-          <NavLink
             to="/subscribers"
             className={linkClassName}
             onClick={onCloseMobile}
