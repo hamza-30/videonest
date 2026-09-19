@@ -12,6 +12,7 @@ import Collections from "./pages/Collections";
 import Subscribers from "./pages/Subscribers";
 import EditChannel from "./pages/EditChannel";
 import AdminDashboard from "./pages/AdminDashboard";
+import SearchResult from "./pages/SearchResult";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 import Layout from "./components/Layout";
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
           {
             path: "watch/:videoId",
             element: <Watch />,
+          },
+          {
+            path: "search",
+            element: <SearchResult />,
           },
           {
             path: "channel/:username",

@@ -3,7 +3,7 @@ import { RiMenuLine } from "react-icons/ri";
 import logo from "../assets/images/logographic.png";
 import { CiSearch } from "react-icons/ci";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LuSettings } from "react-icons/lu";
@@ -25,6 +25,21 @@ function Navbar({
 
   const { user } = useAuthContext();
   const { logout, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.target.blur(); // Drops focus, dismissing the mobile keyboard
+      handleSearch();
+    }
+  };
 
   const openLogoutModal = () => {
     setIsAvatarMenuOpen(false);
@@ -78,13 +93,14 @@ function Navbar({
         <CiSearch className={`text-[18px] shrink-0`} />
         <input
           type="text"
-          name=""
+          name="search"
           value={searchQuery}
           placeholder="Search"
-          className={`flex-1 min-w-0 min-h-full outline-none text-[14.5px] text-[#3d3d3d] pl-2`}
+          className={`flex-1 min-w-0 min-h-full outline-none text-[14.5px] text-[#3d3d3d] pl-2 bg-transparent`}
           onFocus={() => setIsSearchFocused(true)}
           onBlur={() => setIsSearchFocused(false)}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </div>
 
