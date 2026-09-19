@@ -71,7 +71,7 @@ function ChannelInformation({ channel, loading, error, setChannel }) {
                   <strong className="text-slate-900">
                     {formatCompactNumber(channel.subscribersCount)}
                   </strong>{" "}
-                  subscribers
+                  {channel.subscribersCount == 1 ? "subscriber" : "subscribers"}
                 </span>
                 <span>
                   <strong className="text-slate-900">
