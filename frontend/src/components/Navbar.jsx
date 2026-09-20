@@ -2,7 +2,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { RiMenuLine } from "react-icons/ri";
 import logo from "../assets/images/logographic.png";
 import { CiSearch } from "react-icons/ci";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
@@ -22,6 +22,7 @@ function Navbar({
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef(null);
 
   const { user } = useAuthContext();
   const { logout, loading } = useAuth();
@@ -92,6 +93,7 @@ function Navbar({
       >
         <CiSearch className={`text-[18px] shrink-0`} />
         <input
+          ref={searchInputRef}
           type="text"
           name="search"
           value={searchQuery}
@@ -102,6 +104,20 @@ function Navbar({
           onChange={(e) => setSearchQuery(e.target.value)}
           onKeyDown={handleKeyDown}
         />
+        {isSearchFocused && searchQuery && (
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setSearchQuery("");
+              searchInputRef.current?.focus();
+            }}
+            className="shrink-0 flex items-center justify-center p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+            aria-label="Clear search input"
+          >
+            <FiX className="text-[16px]" />
+          </button>
+        )}
       </div>
 
       <div className={`relative`}>
