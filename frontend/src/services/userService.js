@@ -16,4 +16,7 @@ export const userService = {
     apiClient.post("/api/v1/users/change-password", data),
 
   getWatchHistory: () => apiClient.get("/api/v1/users/watch-history"),
+
+  clearWatchHistory: () =>
+    apiClient.delete("/api/v1/users/watch-history/clear"),
 };
