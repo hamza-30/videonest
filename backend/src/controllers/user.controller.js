@@ -160,7 +160,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: 1
+        refreshToken: 1,
       },
     },
     {
@@ -415,7 +415,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         from: "videos",
         localField: "watchHistory",
         foreignField: "_id",
-        as: "watchHistory",
+        as: "watchHistoryVideos",
         pipeline: [
           {
             $lookup: {
@@ -442,6 +442,27 @@ const getWatchHistory = asyncHandler(async (req, res) => {
             },
           },
         ],
+      },
+    },
+    {
+      $addFields: {
+        watchHistory: {
+          $map: {
+            input: "$watchHistory",
+            as: "id",
+            in: {
+              $arrayElemAt: [
+                {
+                  $filter: {
+                    input: "$watchHistoryVideos",
+                    cond: { $eq: ["$$this._id", "$$id"] },
+                  },
+                },
+                0,
+              ],
+            },
+          },
+        },
       },
     },
   ]);

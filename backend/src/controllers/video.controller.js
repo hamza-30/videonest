@@ -179,6 +179,16 @@ const getVideoById = asyncHandler(async (req, res) => {
     throw new ApiError(404, "Video not found");
   }
 
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.watchHistory = [
+      video[0]._id,
+      ...user.watchHistory.filter((id) => !id.equals(video[0]._id)),
+    ];
+    await user.save({ validateBeforeSave: false });
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, video[0], "Video fetched successfully"));
