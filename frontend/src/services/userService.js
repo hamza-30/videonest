@@ -14,4 +14,6 @@ export const userService = {
 
   changePassword: (data) =>
     apiClient.post("/api/v1/users/change-password", data),
+
+  getWatchHistory: () => apiClient.get("/api/v1/users/watch-history"),
 };
