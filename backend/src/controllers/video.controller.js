@@ -189,6 +189,16 @@ const getVideoById = asyncHandler(async (req, res) => {
     await user.save({ validateBeforeSave: false });
   }
 
+  if (!video[0].owner._id.equals(req.user._id)) {
+    await Video.findByIdAndUpdate(video[0]._id, {
+      $inc: {
+        views: 1,
+      },
+    });
+
+    video[0].views += 1;
+  }
+
   return res
     .status(200)
     .json(new ApiResponse(200, video[0], "Video fetched successfully"));
