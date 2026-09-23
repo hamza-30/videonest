@@ -8,7 +8,6 @@ import PlaylistDetails from "./pages/PlaylistDetails";
 import LikedVideos from "./pages/LikedVideos";
 import History from "./pages/History";
 import MyContent from "./pages/MyContent";
-import Collections from "./pages/Collections";
 import Subscribers from "./pages/Subscribers";
 import EditChannel from "./pages/EditChannel";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -16,7 +15,6 @@ import SearchResult from "./pages/SearchResult";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 import Layout from "./components/Layout";
-import Settings from "./pages/Settings";
 
 export const router = createBrowserRouter([
   {
