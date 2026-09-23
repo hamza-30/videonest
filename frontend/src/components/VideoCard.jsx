@@ -133,7 +133,10 @@ function VideoCard({ video, onRemove }) {
               {video.owner?.fullName}
             </Link>
             <div className="text-sm text-gray-600">
-              <span>{formatCompactNumber(video.views)} views</span>
+              <span>
+                {formatCompactNumber(video.views)}{" "}
+                {video.views == 1 ? "view" : "views"}
+              </span>
               <span className="mx-1">•</span>
               <span>{formatTimeAgo(video.createdAt)} </span>
             </div>

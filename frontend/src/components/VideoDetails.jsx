@@ -144,7 +144,10 @@ function VideoDetails({ video, isOwner }) {
       {/* Description Box */}
       <div className="bg-gray-100 rounded-2xl p-3 sm:p-4 mt-1">
         <div className="flex items-center gap-2 text-sm font-semibold text-gray-900 mb-1">
-          <span>{formatCompactNumber(video.views)} views</span>
+          <span>
+            {formatCompactNumber(video.views)}{" "}
+            {video.views == 1 ? "view" : "views"}
+          </span>
           <span>•</span>
           <span>{formatTimeAgo(video.createdAt)}</span>
         </div>
