@@ -10,6 +10,7 @@ import {
 import { dashboardService } from "../services/dashboardService";
 import { toast } from "react-hot-toast";
 import ChannelStatsCard from "../components/ChannelStatsCard";
+import ContentTable from "../components/ContentTable";
 
 function MyContent() {
   const { user } = useAuthContext();
@@ -18,6 +19,9 @@ function MyContent() {
   const [subscribersCount, setSubscribersCount] = useState(0);
   const [videosCount, setVideosCount] = useState(0);
   const [statsLoading, setStatsLoading] = useState(true);
+
+  const [videos, setVideos] = useState([]);
+  const [videosLoading, setVideosLoading] = useState(true);
 
   useEffect(() => {
     const getStats = async () => {
@@ -36,13 +40,38 @@ function MyContent() {
       }
     };
 
+    const getVideos = async () => {
+      setVideosLoading(true);
+      try {
+        const response = await dashboardService.getChannelVideos();
+        setVideos(response.data || []);
+      } catch (err) {
+        toast.error(err.message || "Failed to load channel videos");
+      } finally {
+        setVideosLoading(false);
+      }
+    };
+
     getStats();
+    getVideos();
   }, []);
+
+  const handleVideoDeleted = (deletedVideoId) => {
+    setVideos((prev) => prev.filter((v) => v._id !== deletedVideoId));
+    setVideosCount((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleVideoUpdated = (updatedVideoId, updates) => {
+    setVideos((prev) =>
+      prev.map((v) => (v._id === updatedVideoId ? { ...v, ...updates } : v))
+    );
+  };
 
   return (
     <>
-      <div className="p-4 sm:p-6 w-full">
-        <div className="flex items-center justify-between flex-wrap gap-y-3 mb-7">
+      <div className="p-4 sm:p-6 w-full space-y-7">
+        {/* Header */}
+        <div className="flex items-center justify-between flex-wrap gap-y-3">
           <h1 className="text-2xl font-semibold text-slate-900">
             Welcome back, {user.fullName}!
           </h1>
@@ -55,6 +84,7 @@ function MyContent() {
           </button>
         </div>
 
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           <ChannelStatsCard
             icon={LuEye}
@@ -79,6 +109,22 @@ function MyContent() {
             description="Total Videos"
             value={videosCount}
             loading={statsLoading}
+          />
+        </div>
+
+        {/* Channel Videos Table */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-900">
+              Channel Videos
+            </h2>
+          </div>
+
+          <ContentTable
+            videos={videos}
+            loading={videosLoading}
+            onVideoDeleted={handleVideoDeleted}
+            onVideoUpdated={handleVideoUpdated}
           />
         </div>
       </div>
