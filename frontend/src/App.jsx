@@ -10,7 +10,6 @@ import History from "./pages/History";
 import MyContent from "./pages/MyContent";
 import Subscribers from "./pages/Subscribers";
 import EditChannel from "./pages/EditChannel";
-import AdminDashboard from "./pages/AdminDashboard";
 import SearchResult from "./pages/SearchResult";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
@@ -65,10 +64,6 @@ export const router = createBrowserRouter([
             element: <History />,
           },
           {
-            path: "my-content",
-            element: <MyContent />,
-          },
-          {
             path: "subscribers",
             element: <Subscribers />,
           },
@@ -78,7 +73,7 @@ export const router = createBrowserRouter([
           },
           {
             path: "dashboard",
-            element: <AdminDashboard />,
+            element: <MyContent />,
           },
         ],
       },

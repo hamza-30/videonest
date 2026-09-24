@@ -87,7 +87,7 @@ function Sidebar({ isCollapsed, isMobileOpen, onCloseMobile }) {
             <span className={labelClassName}>History</span>
           </NavLink>
           <NavLink
-            to="/my-content"
+            to="/dashboard"
             className={linkClassName}
             onClick={onCloseMobile}
           >
