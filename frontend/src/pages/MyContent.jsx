@@ -11,6 +11,7 @@ import { dashboardService } from "../services/dashboardService";
 import { toast } from "react-hot-toast";
 import ChannelStatsCard from "../components/ChannelStatsCard";
 import ContentTable from "../components/ContentTable";
+import UploadVideoModal from "../components/UploadVideoModal";
 
 function MyContent() {
   const { user } = useAuthContext();
@@ -22,6 +23,7 @@ function MyContent() {
 
   const [videos, setVideos] = useState([]);
   const [videosLoading, setVideosLoading] = useState(true);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   useEffect(() => {
     const getStats = async () => {
@@ -67,6 +69,11 @@ function MyContent() {
     );
   };
 
+  const handleVideoUploaded = (newVideo) => {
+    setVideos((prev) => [newVideo, ...prev]);
+    setVideosCount((prev) => prev + 1);
+  };
+
   return (
     <>
       <div className="p-4 sm:p-6 w-full space-y-7">
@@ -77,6 +84,7 @@ function MyContent() {
           </h1>
           <button
             type="button"
+            onClick={() => setIsUploadModalOpen(true)}
             className="inline-flex items-center gap-2 rounded-[0.55rem] bg-[#8132e5] px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-[#7026c8] active:bg-[#7026c8] cursor-pointer"
           >
             <LuCloudUpload className="text-lg" />
@@ -128,6 +136,12 @@ function MyContent() {
           />
         </div>
       </div>
+
+      <UploadVideoModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        onVideoUploaded={handleVideoUploaded}
+      />
     </>
   );
 }
