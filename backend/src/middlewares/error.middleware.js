@@ -4,7 +4,7 @@ export const errorHandler = (err, req, res, next) => {
 
   const response = {
     success: false,
-    statusCode: statusCode,
+    statusCode: statusCode || 500,
     message: message,
     errors: err.errors || [],
   };
