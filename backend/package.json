@@ -1,7 +1,7 @@
 {
-  "name": "chai-aur-backend",
+  "name": "videonest-backend",
   "version": "1.0.0",
-  "description": "a backend course from chai aur code",
+  "description": "backend for a video sharing platform",
   "keywords": [
     "javascript",
     "backend"
