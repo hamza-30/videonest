@@ -87,13 +87,16 @@ function VideoCard({ video, onRemove }) {
 
           <div className="min-w-0 flex-1">
             {/* Title & Menu row */}
-            <div className="flex items-start justify-between gap-1">
-              <div className="text-[15px] font-medium line-clamp-2">
+            <div className="flex items-start justify-between gap-1 mb-1.5">
+              <div className="text-[15px] font-medium line-clamp-2 leading-snug">
                 {video.title}
               </div>
 
               {/* Three-dot menu */}
-              <div ref={menuRef} className="relative shrink-0 -mt-0.5 -mr-1">
+              <div
+                ref={menuRef}
+                className="relative shrink-0 -mt-0.5 -mr-1 h-5"
+              >
                 <button
                   onClick={handleMenuClick}
                   className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-black/10 hover:text-gray-800 transition cursor-pointer"
@@ -128,7 +131,7 @@ function VideoCard({ video, onRemove }) {
             <Link
               to={`/channel/${video.owner?.username || video.owner}`}
               onClick={handleChannelClick}
-              className="text-sm w-fit text-gray-600 relative bottom-0.5 mb-1 block hover:text-[#8132e5] active:text-[#8132e5] hover:underline active:underline truncate"
+              className="text-sm w-fit max-w-full text-gray-600 mb-1 block hover:text-[#8132e5] active:text-[#8132e5] hover:underline active:underline truncate"
             >
               {video.owner?.fullName}
             </Link>
