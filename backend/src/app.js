@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { errorHandler } from "./middlewares/error.middleware.js";
+import { globalLimiter } from "./middlewares/rateLimiter.middleware.js";
 
 const app = express();
 
@@ -16,6 +17,10 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
+
+//global rate limiter before hitting routes
+app.set("trust proxy", 1);
+app.use(globalLimiter);
 
 //routes import
 import userRouter from "./routes/user.routes.js";
