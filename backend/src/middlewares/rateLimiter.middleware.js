@@ -29,7 +29,7 @@ export const commentLimiter = rateLimit({
 
 export const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 150,
+  limit: 200,
   standardHeaders: true,
   legacyHeaders: false,
   statusCode: 429,
