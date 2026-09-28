@@ -21,12 +21,17 @@ const getAllVideos = asyncHandler(async (req, res) => {
   }
 
   if (query) {
-    pipeline.push({
+    pipeline.unshift({
       $match: {
-        $or: [
-          { title: { $regex: query, $options: "i" } },
-          { description: { $regex: query, $options: "i" } },
-        ],
+        $text: {
+          $search: query,
+        },
+      },
+    });
+
+    pipeline.push({
+      $addFields: {
+        score: { $meta: "textScore" },
       },
     });
   }
@@ -35,8 +40,9 @@ const getAllVideos = asyncHandler(async (req, res) => {
     $match: { isPublished: true },
   });
 
-  const sortStage = {};
-  sortStage[sortBy] = parseInt(sortType);
+  const sortStage = query
+    ? { score: { $meta: "textScore" } }
+    : { [sortBy]: parseInt(sortType) };
   pipeline.push({ $sort: sortStage });
 
   pipeline.push({
