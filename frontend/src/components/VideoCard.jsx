@@ -106,7 +106,7 @@ function VideoCard({ video, onRemove }) {
                 </button>
 
                 {menuOpen && (
-                  <div className="absolute right-0 top-8 z-50 w-48 rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60">
+                  <div className="absolute right-0 top-8 z-50 w-48 rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60 overflow-hidden">
                     <button
                       onClick={handleSaveToPlaylist}
                       className="flex w-full items-center gap-2.5 rounded-t-xl px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition cursor-pointer"
