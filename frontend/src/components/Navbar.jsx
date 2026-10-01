@@ -11,6 +11,7 @@ import { FiLogOut } from "react-icons/fi";
 import { useAuthContext } from "../context/auth/AuthContextProvider";
 import useAuth from "../hooks/useAuth";
 import LogoutModal from "./LogoutModal";
+import RecentSearchBar from "./RecentSearchBar";
 
 function Navbar({
   isSidebarCollapsed,
@@ -23,21 +24,70 @@ function Navbar({
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef(null);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try {
+      const stored = localStorage.getItem("recent_searches");
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const { user } = useAuthContext();
   const { logout, loading } = useAuth();
   const navigate = useNavigate();
 
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+  const saveSearchQuery = (query) => {
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    setRecentSearches((prev) => {
+      const updated = [
+        trimmed,
+        ...prev.filter((item) => item.toLowerCase() !== trimmed.toLowerCase()),
+      ].slice(0, 8);
+      try {
+        localStorage.setItem("recent_searches", JSON.stringify(updated));
+      } catch (error) {
+        console.error("Failed to save search history:", error);
+      }
+      return updated;
+    });
+  };
+
+  const handleDeleteRecentSearch = (queryToDelete) => {
+    setRecentSearches((prev) => {
+      const updated = prev.filter((item) => item !== queryToDelete);
+      try {
+        localStorage.setItem("recent_searches", JSON.stringify(updated));
+      } catch (error) {
+        console.error("Failed to delete search item:", error);
+      }
+      return updated;
+    });
+  };
+
+  const handleSearch = (queryToSearch) => {
+    const target = (
+      queryToSearch !== undefined ? queryToSearch : searchQuery
+    ).trim();
+    if (target) {
+      saveSearchQuery(target);
+      setSearchQuery(target);
+      setIsSearchFocused(false);
+      searchInputRef.current?.blur();
+      navigate(`/search?q=${encodeURIComponent(target)}`);
     }
   };
+
+  const filteredRecentSearches = searchQuery.trim()
+    ? recentSearches.filter((item) =>
+        item.toLowerCase().includes(searchQuery.toLowerCase().trim())
+      )
+    : recentSearches;
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      e.target.blur(); // Drops focus, dismissing the mobile keyboard
       handleSearch();
     }
   };
@@ -85,38 +135,58 @@ function Navbar({
       </div>
 
       <div
-        className={`flex items-center ${
+        className={`relative ${
           isSearchFocused ? "w-[90%] lg:w-[40%]" : "w-[40%]"
         } ${
           isSearchFocused ? "mx-auto lg:mx-0" : ""
-        } h-9.5 px-3 border border-gray-300 focus-within:border-transparent focus-within:ring focus-within:ring-[#8132e5] rounded-xl overflow-x-hidden transition-[width] duration-150 ease-in-out`}
+        } transition-[width] duration-150 ease-in-out`}
       >
-        <CiSearch className={`text-[18px] shrink-0`} />
-        <input
-          ref={searchInputRef}
-          type="text"
-          name="search"
-          value={searchQuery}
-          placeholder="Search"
-          className={`flex-1 min-w-0 min-h-full outline-none text-[14.5px] text-[#3d3d3d] pl-2 bg-transparent`}
-          onFocus={() => setIsSearchFocused(true)}
-          onBlur={() => setIsSearchFocused(false)}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-        {isSearchFocused && searchQuery && (
-          <button
-            type="button"
-            onMouseDown={(e) => {
-              e.preventDefault();
-              setSearchQuery("");
-              searchInputRef.current?.focus();
-            }}
-            className="shrink-0 flex items-center justify-center p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-            aria-label="Clear search input"
+        <div
+          className={`flex w-full items-center h-9.5 px-3 border border-gray-300 focus-within:border-transparent focus-within:ring focus-within:ring-[#8132e5] rounded-xl overflow-x-hidden`}
+        >
+          <CiSearch className={`text-[18px] shrink-0`} />
+          <input
+            ref={searchInputRef}
+            type="text"
+            name="search"
+            value={searchQuery}
+            placeholder="Search"
+            className={`flex-1 min-w-0 min-h-full outline-none text-[14.5px] text-[#3d3d3d] pl-2 bg-transparent`}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          {isSearchFocused && searchQuery && (
+            <button
+              type="button"
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setSearchQuery("");
+                searchInputRef.current?.focus();
+              }}
+              className="shrink-0 flex items-center justify-center p-1 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+              aria-label="Clear search input"
+            >
+              <FiX className="text-[16px]" />
+            </button>
+          )}
+        </div>
+
+        {isSearchFocused && filteredRecentSearches.length > 0 && (
+          <div
+            onMouseDown={(e) => e.preventDefault()}
+            className="absolute top-11 left-0 right-0 z-50 w-full bg-white border border-gray-200 shadow-lg shadow-gray-200/60 max-h-60 overflow-y-auto rounded-xl"
           >
-            <FiX className="text-[16px]" />
-          </button>
+            {filteredRecentSearches.map((item) => (
+              <RecentSearchBar
+                key={item}
+                queryText={item}
+                onSelect={(query) => handleSearch(query)}
+                onDelete={handleDeleteRecentSearch}
+              />
+            ))}
+          </div>
         )}
       </div>
 
