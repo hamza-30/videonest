@@ -56,3 +56,15 @@ export const deleteNotification = async ({
     console.log(error);
   }
 };
+
+export const deleteNotificationsByTarget = async (targetId) => {
+  try {
+    if (!targetId) return;
+
+    await Notification.deleteMany({
+      $or: [{ target: targetId }, { parentTarget: targetId }],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
