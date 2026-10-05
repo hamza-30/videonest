@@ -1,9 +1,15 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Like } from "../models/like.model.js";
 import { Comment } from "../models/comment.model.js";
+import { Video } from "../models/video.model.js";
+import { Tweet } from "../models/tweet.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  createNotification,
+  deleteNotification,
+} from "../services/notification.service.js";
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
   const { videoId } = req.params;
@@ -13,12 +19,25 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Video ID");
   }
 
+  const video = await Video.findById(videoId);
+
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+
   const deletedLike = await Like.findOneAndDelete({
     video: videoId,
     likedBy: req.user._id,
   });
 
   if (deletedLike) {
+    await deleteNotification({
+      recipientId: video.owner,
+      actorId: req.user._id,
+      type: "video_like",
+      targetId: videoId,
+    });
+
     return res
       .status(200)
       .json(
@@ -29,6 +48,13 @@ const toggleVideoLike = asyncHandler(async (req, res) => {
   const like = await Like.create({
     video: videoId,
     likedBy: req.user._id,
+  });
+
+  await createNotification({
+    recipientId: video.owner,
+    actorId: req.user._id,
+    type: "video_like",
+    targetId: videoId,
   });
 
   return res
@@ -44,12 +70,25 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Comment ID");
   }
 
+  const comment = await Comment.findById(commentId);
+
+  if (!comment) {
+    throw new ApiError(404, "Comment not found");
+  }
+
   const deletedLike = await Like.findOneAndDelete({
     comment: commentId,
     likedBy: req.user._id,
   });
 
   if (deletedLike) {
+    await deleteNotification({
+      recipientId: comment.owner,
+      actorId: req.user._id,
+      type: "comment_like",
+      targetId: commentId,
+    });
+
     return res
       .status(200)
       .json(
@@ -60,6 +99,14 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
   const like = await Like.create({
     comment: commentId,
     likedBy: req.user._id,
+  });
+
+  await createNotification({
+    recipientId: comment.owner,
+    actorId: req.user._id,
+    type: "comment_like",
+    targetId: commentId,
+    parentTargetId: comment.video,
   });
 
   return res
@@ -76,12 +123,25 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid Tweet ID");
   }
 
+  const tweet = await Tweet.findById(tweetId);
+
+  if (!tweet) {
+    throw new ApiError(404, "Tweet not found");
+  }
+
   const deletedLike = await Like.findOneAndDelete({
     tweet: tweetId,
     likedBy: req.user._id,
   });
 
   if (deletedLike) {
+    await deleteNotification({
+      recipientId: tweet.owner,
+      actorId: req.user._id,
+      type: "tweet_like",
+      targetId: tweetId,
+    });
+
     return res
       .status(200)
       .json(
@@ -92,6 +152,13 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
   const like = await Like.create({
     tweet: tweetId,
     likedBy: req.user._id,
+  });
+
+  await createNotification({
+    recipientId: tweet.owner,
+    actorId: req.user._id,
+    type: "tweet_like",
+    targetId: tweetId,
   });
 
   return res

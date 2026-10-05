@@ -5,6 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { deleteNotificationsByTarget } from "../services/notification.service.js";
 
 const getAllVideos = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query;
@@ -280,6 +281,8 @@ const deleteVideo = asyncHandler(async (req, res) => {
   if (!deletedVideo) {
     throw new ApiError(500, "Failed to delete video");
   }
+
+  await deleteNotificationsByTarget(videoId);
 
   return res
     .status(200)
