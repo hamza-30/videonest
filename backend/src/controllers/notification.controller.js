@@ -4,7 +4,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import mongoose, { isValidObjectId } from "mongoose";
 import { Notification } from "../models/notification.model.js";
 
-export const getUserNotifications = asyncHandler(async (req, res) => {
+const getUserNotifications = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 
   const notificationsAggregate = Notification.aggregate([
@@ -53,7 +53,7 @@ export const getUserNotifications = asyncHandler(async (req, res) => {
     );
 });
 
-export const getUnreadNotificationsCount = asyncHandler(async (req, res) => {
+const getUnreadNotificationsCount = asyncHandler(async (req, res) => {
   const unreadNotificationsCount = await Notification.countDocuments({
     recipient: new mongoose.Types.ObjectId(req.user._id),
     isRead: false,
@@ -70,7 +70,7 @@ export const getUnreadNotificationsCount = asyncHandler(async (req, res) => {
     );
 });
 
-export const readNotifications = asyncHandler(async (req, res) => {
+const readNotifications = asyncHandler(async (req, res) => {
   const { upToId } = req.body;
 
   if (!upToId || !isValidObjectId(upToId)) {
@@ -98,3 +98,5 @@ export const readNotifications = asyncHandler(async (req, res) => {
       )
     );
 });
+
+export { getUserNotifications, getUnreadNotificationsCount, readNotifications };
