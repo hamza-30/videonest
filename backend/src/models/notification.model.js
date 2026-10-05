@@ -7,7 +7,6 @@ const notificationSchema = new mongoose.Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     actor: {
       type: Schema.Types.ObjectId,
@@ -19,17 +18,12 @@ const notificationSchema = new mongoose.Schema(
       enum: ["video_like", "comment_like", "tweet_like", "video_comment"],
       required: true,
     },
-    comment: {
+    target: {
       type: Schema.Types.ObjectId,
-      ref: "Comment",
+      required: true,
     },
-    tweet: {
+    parentTarget: {
       type: Schema.Types.ObjectId,
-      ref: "Tweet",
-    },
-    video: {
-      type: Schema.Types.ObjectId,
-      ref: "Video",
     },
     isRead: {
       type: Boolean,
@@ -42,5 +36,10 @@ const notificationSchema = new mongoose.Schema(
 );
 
 notificationSchema.plugin(mongooseAggregatePaginate);
+
+notificationSchema.index(
+  { recipient: 1, actor: 1, type: 1, target: 1 },
+  { unique: true }
+);
 
 export const Notification = mongoose.model("Notification", notificationSchema);
