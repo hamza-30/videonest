@@ -9,7 +9,7 @@ import {
   removeConnection,
 } from "../services/notification.service.js";
 
-const activeEventStream = (req, res) => {
+const streamNotifications = (req, res) => {
   const userId = req.user._id;
 
   res.set({
@@ -103,7 +103,7 @@ const readNotifications = asyncHandler(async (req, res) => {
 });
 
 export {
-  activeEventStream,
+  streamNotifications,
   getUserNotifications,
   getUnreadNotificationsCount,
   readNotifications,
