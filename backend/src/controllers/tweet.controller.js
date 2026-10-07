@@ -1,9 +1,9 @@
 import mongoose, { isValidObjectId } from "mongoose";
 import { Tweet } from "../models/tweet.model.js";
-import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { deleteNotificationsByTarget } from "../services/notification.service.js";
 
 const createTweet = asyncHandler(async (req, res) => {
   //TODO: create tweet
@@ -113,6 +113,8 @@ const deleteTweet = asyncHandler(async (req, res) => {
   }
 
   const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
+
+  await deleteNotificationsByTarget(tweetId);
 
   return res
     .status(200)

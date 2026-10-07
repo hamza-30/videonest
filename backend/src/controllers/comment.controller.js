@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 import { Comment } from "../models/comment.model.js";
+import { Video } from "../models/video.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  createNotification,
+  deleteNotificationsByTarget,
+} from "../services/notification.service.js";
 
 const getVideoComments = asyncHandler(async (req, res) => {
   //TODO: get all comments for a video
@@ -102,6 +107,12 @@ const addComment = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Comment is required");
   }
 
+  const video = await Video.findById(videoId);
+
+  if (!video) {
+    throw new ApiError(404, "Video not found");
+  }
+
   const commentText = await Comment.create({
     content: content,
     video: videoId,
@@ -111,6 +122,14 @@ const addComment = asyncHandler(async (req, res) => {
   if (!commentText) {
     throw new ApiError(500, "Failed to create comment");
   }
+
+  await createNotification({
+    recipientId: video.owner,
+    actorId: req.user._id,
+    type: "video_comment",
+    targetId: commentText._id,
+    parentTargetId: videoId,
+  });
 
   return res
     .status(201)
@@ -192,6 +211,8 @@ const deleteComment = asyncHandler(async (req, res) => {
   }
 
   await Comment.findByIdAndDelete(commentId);
+
+  await deleteNotificationsByTarget(commentId);
 
   return res
     .status(200)
