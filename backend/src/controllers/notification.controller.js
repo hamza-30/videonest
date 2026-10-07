@@ -3,6 +3,31 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import mongoose, { isValidObjectId } from "mongoose";
 import { Notification } from "../models/notification.model.js";
+import {
+  addConnection,
+  removeConnection,
+} from "../services/notification.service.js";
+
+const activeEventStream = (req, res) => {
+  const userId = req.user._id;
+
+  res.set({
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+    "X-Accel-Buffering": "no",
+  });
+
+  res.flushHeaders();
+  addConnection(userId, res);
+
+  const heartbeat = setInterval(() => res.write(": ping\n\n"), 25000);
+
+  req.on("close", () => {
+    clearInterval(heartbeat);
+    removeConnection(userId, res);
+  });
+};
 
 const getUserNotifications = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
@@ -99,4 +124,9 @@ const readNotifications = asyncHandler(async (req, res) => {
     );
 });
 
-export { getUserNotifications, getUnreadNotificationsCount, readNotifications };
+export {
+  activeEventStream,
+  getUserNotifications,
+  getUnreadNotificationsCount,
+  readNotifications,
+};

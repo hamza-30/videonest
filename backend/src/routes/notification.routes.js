@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {
+  activeEventStream,
   getUnreadNotificationsCount,
   getUserNotifications,
   readNotifications,
@@ -13,5 +14,6 @@ router.use(verifyJWT);
 router.route("/").get(getUserNotifications);
 router.route("/unread-count").get(getUnreadNotificationsCount);
 router.route("/read").patch(readNotifications);
+router.route("/stream").get(activeEventStream);
 
 export default router;
