@@ -75,6 +75,14 @@ function NotificationItem({ notification, onClose }) {
     } else if (type === "tweet_like") {
       const channelUsername = user?.username || actor?.username;
       if (channelUsername) navigate(`/channel/${channelUsername}`);
+      const tweetId =
+        getEntityId(notification.target) || notification.targetDetails?._id;
+      if (tweetId) {
+        navigate(`/tweet/${tweetId}`);
+      } else {
+        const channelUsername = user?.username || actor?.username;
+        if (channelUsername) navigate(`/channel/${channelUsername}`);
+      }
     }
   };
 
