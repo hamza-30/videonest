@@ -75,11 +75,15 @@ const createNotification = async ({
       return;
     }
 
-    const payload = await Notification.findById(result.upsertedId)
-      .populate("actor", "username fullName avatar")
-      .lean();
+    const [payload] = await Notification.aggregate(
+      buildNotificationPipeline({
+        _id: result.upsertedId,
+      })
+    );
 
-    pushToUser(recipientId, payload);
+    if (payload) {
+      pushToUser(recipientId, payload);
+    }
   } catch (error) {
     if (error.code !== 11000) {
       console.log(error);
@@ -116,10 +120,126 @@ const deleteNotificationsByTarget = async (targetId) => {
   }
 };
 
+const buildNotificationPipeline = (match) => {
+  return [
+    {
+      $match: match,
+    },
+    {
+      $sort: { _id: -1 },
+    },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "actor",
+        foreignField: "_id",
+        as: "actor",
+        pipeline: [
+          {
+            $project: {
+              fullName: 1,
+              username: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: { path: "$actor", preserveNullAndEmptyArrays: true } },
+
+    {
+      $lookup: {
+        from: "videos",
+        localField: "target",
+        foreignField: "_id",
+        as: "videoTarget",
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              thumbnail: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "comments",
+        localField: "target",
+        foreignField: "_id",
+        as: "commentTarget",
+        pipeline: [
+          {
+            $project: {
+              content: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "tweets",
+        localField: "target",
+        foreignField: "_id",
+        as: "tweetTarget",
+        pipeline: [
+          {
+            $project: {
+              content: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $lookup: {
+        from: "videos",
+        localField: "parentTarget",
+        foreignField: "_id",
+        as: "parentVideo",
+        pipeline: [
+          {
+            $project: {
+              title: 1,
+              thumbnail: 1,
+            },
+          },
+        ],
+      },
+    },
+
+    {
+      $addFields: {
+        targetDetails: {
+          $arrayElemAt: [
+            {
+              $concatArrays: ["$videoTarget", "$commentTarget", "$tweetTarget"],
+            },
+            0,
+          ],
+        },
+        parentVideo: { $arrayElemAt: ["$parentVideo", 0] },
+      },
+    },
+
+    {
+      $project: {
+        videoTarget: 0,
+        commentTarget: 0,
+        tweetTarget: 0,
+      },
+    },
+  ];
+};
+
 export {
   addConnection,
   removeConnection,
   createNotification,
   deleteNotification,
   deleteNotificationsByTarget,
+  buildNotificationPipeline,
 };

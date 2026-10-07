@@ -5,6 +5,7 @@ import mongoose, { isValidObjectId } from "mongoose";
 import { Notification } from "../models/notification.model.js";
 import {
   addConnection,
+  buildNotificationPipeline,
   removeConnection,
 } from "../services/notification.service.js";
 
@@ -32,34 +33,11 @@ const activeEventStream = (req, res) => {
 const getUserNotifications = asyncHandler(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
 
-  const notificationsAggregate = Notification.aggregate([
-    {
-      $match: { recipient: new mongoose.Types.ObjectId(req.user._id) },
-    },
-    {
-      $sort: {
-        _id: -1,
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "actor",
-        foreignField: "_id",
-        as: "actor",
-        pipeline: [
-          {
-            $project: {
-              avatar: 1,
-              fullName: 1,
-              username: 1,
-            },
-          },
-        ],
-      },
-    },
-    { $unwind: { path: "$actor", preserveNullAndEmptyArrays: true } },
-  ]);
+  const notificationsAggregate = Notification.aggregate(
+    buildNotificationPipeline({
+      recipient: new mongoose.Types.ObjectId(req.user._id),
+    })
+  );
 
   const options = {
     page: parseInt(page),
