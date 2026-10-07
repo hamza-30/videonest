@@ -12,6 +12,7 @@ function useNotifications() {
 
   // Track whether the full list has been fetched at least once
   const hasFetched = useRef(false);
+  const isFetchingMoreRef = useRef(false);
 
   // --- Unread count: fetch on mount ---
   useEffect(() => {
@@ -61,21 +62,27 @@ function useNotifications() {
 
   // --- Load more (pagination) ---
   const fetchMore = useCallback(async () => {
-    if (!hasNextPage || loading) return;
+    if (!hasNextPage || isFetchingMoreRef.current) return;
 
-    const nextPage = page + 1;
+    isFetchingMoreRef.current = true;
     setLoading(true);
+    const nextPage = page + 1;
     try {
       const res = await notificationService.getNotifications(nextPage);
-      setNotifications((prev) => [...prev, ...res.data.docs]);
+      setNotifications((prev) => {
+        const existingIds = new Set(prev.map((n) => n._id));
+        const newDocs = res.data.docs.filter((n) => !existingIds.has(n._id));
+        return [...prev, ...newDocs];
+      });
       setHasNextPage(res.data.hasNextPage);
       setPage(nextPage);
     } catch (err) {
       // silently fail
     } finally {
       setLoading(false);
+      isFetchingMoreRef.current = false;
     }
-  }, [hasNextPage, loading, page]);
+  }, [hasNextPage, page]);
 
   // --- Mark as read: call with the _id of the topmost notification ---
   const markAsRead = useCallback(
