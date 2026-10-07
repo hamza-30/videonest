@@ -4,7 +4,7 @@ const API_BASE = import.meta.env.VITE_API_URL || "";
 
 export const notificationService = {
   getNotifications: (page = 1, limit = 10) =>
-    apiClient.get(`/api/v1/notifications/?page=${page}&limit=${limit}`),
+    apiClient.get(`/api/v1/notifications?page=${page}&limit=${limit}`),
 
   getUnreadCount: () => apiClient.get("/api/v1/notifications/unread-count"),
 
@@ -16,4 +16,3 @@ export const notificationService = {
       withCredentials: true,
     }),
 };
-
