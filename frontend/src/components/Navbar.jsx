@@ -2,7 +2,7 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { RiMenuLine } from "react-icons/ri";
 import logo from "../assets/images/logographic.png";
 import { CiSearch } from "react-icons/ci";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { LuLayoutDashboard } from "react-icons/lu";
@@ -12,6 +12,7 @@ import { useAuthContext } from "../context/auth/AuthContextProvider";
 import useAuth from "../hooks/useAuth";
 import LogoutModal from "./LogoutModal";
 import RecentSearchBar from "./RecentSearchBar";
+import NotificationBell from "./NotificationBell";
 
 function Navbar({
   isSidebarCollapsed,
@@ -24,6 +25,20 @@ function Navbar({
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef(null);
+  const avatarMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!isAvatarMenuOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(e.target)) {
+        setIsAvatarMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isAvatarMenuOpen]);
   const [recentSearches, setRecentSearches] = useState(() => {
     try {
       const stored = localStorage.getItem("recent_searches");
@@ -190,62 +205,66 @@ function Navbar({
         )}
       </div>
 
-      <div className={`relative`}>
-        <div
-          className={`${
-            isSearchFocused ? "hidden lg:block" : "block"
-          } h-9 w-9 overflow-hidden rounded-full border border-gray-100`}
-          onClick={() => setIsAvatarMenuOpen((prev) => !prev)}
-        >
-          <img
-            src={user.avatar}
-            alt="user-avatar"
-            className={`h-full w-full object-cover`}
-          />
-        </div>
+      <div
+        className={`${isSearchFocused ? "hidden lg:flex" : "flex"} items-center gap-2`}
+      >
+        <NotificationBell />
 
-        <div
-          className={`${isAvatarMenuOpen ? "absolute" : "hidden"} right-0 top-11 z-50 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60 transition-transform duration-200 ease-in-out`}
-        >
-          <div className={`flex w-full flex-col p-1.5`}>
-            <div
-              className={`border-b border-gray-200 px-3 pb-2.5 pt-1.5 text-[14px] font-semibold text-gray-800`}
-            >
-              {user.fullName}
+        <div ref={avatarMenuRef} className={`relative`}>
+          <div
+            className={`h-9 w-9 overflow-hidden rounded-full border border-gray-100 cursor-pointer`}
+            onClick={() => setIsAvatarMenuOpen((prev) => !prev)}
+          >
+            <img
+              src={user.avatar}
+              alt="user-avatar"
+              className={`h-full w-full object-cover`}
+            />
+          </div>
+
+          <div
+            className={`${isAvatarMenuOpen ? "absolute" : "hidden"} right-0 top-11 z-50 w-52 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg shadow-gray-200/60 transition-transform duration-200 ease-in-out`}
+          >
+            <div className={`flex w-full flex-col p-1.5`}>
+              <div
+                className={`border-b border-gray-200 px-3 pb-2.5 pt-1.5 text-[14px] font-semibold text-gray-800`}
+              >
+                {user.fullName}
+              </div>
+              <Link
+                to={`/channel/${user.username}`}
+                onClick={() => setIsAvatarMenuOpen(false)}
+                className={`flex h-9 items-center gap-x-3 rounded-lg px-3 mt-1 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
+              >
+                <FaRegUser className={`text-[15px]`} />
+                <span className={`text-[14px]`}>My channel</span>
+              </Link>
+              <Link
+                to={"/dashboard"}
+                onClick={() => setIsAvatarMenuOpen(false)}
+                className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
+              >
+                <LuLayoutDashboard className={`text-[15px]`} />
+                <span className={`text-[14px]`}>Dashboard</span>
+              </Link>
+              <Link
+                to={"/edit-channel"}
+                onClick={() => setIsAvatarMenuOpen(false)}
+                className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
+              >
+                <LuSettings className={`text-[15px]`} />
+                <span className={`text-[14px]`}>Settings</span>
+              </Link>
+              <div className={`my-1 border-t border-gray-200`}></div>
+              <button
+                type="button"
+                onClick={openLogoutModal}
+                className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
+              >
+                <FiLogOut className={`text-[15.5px]`} />
+                <span className={`text-[14px]`}>Log out</span>
+              </button>
             </div>
-            <Link
-              to={`/channel/${user.username}`}
-              onClick={() => setIsAvatarMenuOpen(false)}
-              className={`flex h-9 items-center gap-x-3 rounded-lg px-3 mt-1 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
-            >
-              <FaRegUser className={`text-[15px]`} />
-              <span className={`text-[14px]`}>My channel</span>
-            </Link>
-            <Link
-              to={"/dashboard"}
-              onClick={() => setIsAvatarMenuOpen(false)}
-              className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
-            >
-              <LuLayoutDashboard className={`text-[15px]`} />
-              <span className={`text-[14px]`}>Dashboard</span>
-            </Link>
-            <Link
-              to={"/edit-channel"}
-              onClick={() => setIsAvatarMenuOpen(false)}
-              className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
-            >
-              <LuSettings className={`text-[15px]`} />
-              <span className={`text-[14px]`}>Settings</span>
-            </Link>
-            <div className={`my-1 border-t border-gray-200`}></div>
-            <button
-              type="button"
-              onClick={openLogoutModal}
-              className={`flex h-9 items-center gap-x-3 rounded-lg px-3 text-gray-700 transition-colors hover:bg-[#f1edfc] hover:text-[#8132e5] active:bg-[#f1edfc] active:text-[#8132e5]`}
-            >
-              <FiLogOut className={`text-[15.5px]`} />
-              <span className={`text-[14px]`}>Log out</span>
-            </button>
           </div>
         </div>
       </div>

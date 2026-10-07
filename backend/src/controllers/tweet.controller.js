@@ -66,6 +66,66 @@ const getUserTweets = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, tweets, "User tweets fetched successfully"));
 });
 
+const getTweetById = asyncHandler(async (req, res) => {
+  const { tweetId } = req.params;
+
+  if (!isValidObjectId(tweetId)) {
+    throw new ApiError(400, "Invalid Tweet ID");
+  }
+
+  const [tweet] = await Tweet.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(tweetId),
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "owner",
+        foreignField: "_id",
+        as: "owner",
+        pipeline: [
+          {
+            $project: {
+              fullName: 1,
+              username: 1,
+              avatar: 1,
+            },
+          },
+        ],
+      },
+    },
+    {
+      $unwind: "$owner",
+    },
+    {
+      $lookup: {
+        from: "likes",
+        localField: "_id",
+        foreignField: "tweet",
+        as: "likes",
+      },
+    },
+    {
+      $addFields: {
+        likesCount: { $size: "$likes" },
+        isLiked: {
+          $in: [req.user?._id, "$likes.likedBy"],
+        },
+      },
+    },
+  ]);
+
+  if (!tweet) {
+    throw new ApiError(404, "Tweet not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweet, "Tweet fetched successfully"));
+}); 
+
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
   const { tweetId } = req.params;
@@ -121,4 +181,4 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, deletedTweet, "Tweet deleted successfully"));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+export { createTweet, getUserTweets, getTweetById, updateTweet, deleteTweet };

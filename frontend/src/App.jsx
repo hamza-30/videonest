@@ -14,6 +14,7 @@ import SearchResult from "./pages/SearchResult";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import PublicRoutes from "./components/PublicRoutes";
 import Layout from "./components/Layout";
+import Tweet from "./pages/Tweet";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <MyContent />,
+          },
+          {
+            path: "tweet/:tweetId",
+            element: <Tweet />,
           },
         ],
       },

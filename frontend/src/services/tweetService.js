@@ -3,6 +3,8 @@ import { apiClient } from "./api";
 export const tweetService = {
   getUserTweets: (userId) => apiClient.get(`/api/v1/tweets/user/${userId}`),
 
+  getTweetById: (tweetId) => apiClient.get(`/api/v1/tweets/${tweetId}`),
+
   createTweet: (body) => apiClient.post(`/api/v1/tweets/`, body),
 
   updateTweet: (tweetId, body) =>

@@ -12,7 +12,14 @@ import DeleteModal from "./DeleteModal";
 import EmojiPicker from "./EmojiPicker";
 import { likeService } from "../services/likeService";
 
-function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
+function TweetCard({
+  tweet,
+  isOwner,
+  channel,
+  editTweet,
+  deleteTweet,
+  className = "",
+}) {
   const [showMenu, setShowMenu] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -168,7 +175,9 @@ function TweetCard({ tweet, isOwner, channel, editTweet, deleteTweet }) {
   };
 
   return (
-    <div className="flex gap-3 border-b border-gray-200 px-4 py-3 transition-colors hover:bg-slate-50/60 sm:px-8">
+    <div
+      className={`flex gap-3 border-b border-gray-200 px-4 py-3 transition-colors hover:bg-slate-50/60 sm:px-8 ${className}`}
+    >
       {/* Left: Author Avatar */}
       <div className="h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#8132e5]/10">
         <img
