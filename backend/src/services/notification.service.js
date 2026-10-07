@@ -1,35 +1,35 @@
 import { Notification } from "../models/notification.model.js";
 
-const connection = new Map();
+const connections = new Map();
 
 const addConnection = (userId, res) => {
   const id = userId.toString();
 
-  if (!connection.has(id)) {
-    connection.set(id, new Set());
+  if (!connections.has(id)) {
+    connections.set(id, new Set());
   }
-  connection.get(id).add(res);
+  connections.get(id).add(res);
 
-  console.log("stream connected:", connection.get(id).size);
+  console.log("stream connected:", connections.get(id).size);
 };
 
 const removeConnection = (userId, res) => {
   const id = userId.toString();
 
-  let set = connection.get(id);
+  let set = connections.get(id);
 
   if (!set) return;
 
   set.delete(res);
   if (set.size == 0) {
-    connection.delete(id);
+    connections.delete(id);
   }
 
-  console.log("stream disconnected", id, connection.get(id)?.size ?? 0);
+  console.log("stream disconnected", id, connections.get(id)?.size ?? 0);
 };
 
 const pushToUser = (userId, notification) => {
-  const set = connection.get(userId.toString());
+  const set = connections.get(userId.toString());
 
   if (!set) {
     return;
@@ -96,7 +96,7 @@ const deleteNotification = async ({ recipientId, actorId, type, targetId }) => {
     if (!recipientId || !actorId || !type || !targetId) return;
     if (recipientId.toString() === actorId.toString()) return;
 
-    const result = await Notification.deleteOne({
+    await Notification.deleteOne({
       recipient: recipientId,
       actor: actorId,
       type: type,
