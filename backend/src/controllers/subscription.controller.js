@@ -4,6 +4,10 @@ import { Subscription } from "../models/subscription.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {
+  createNotification,
+  deleteNotification,
+} from "../services/notification.service.js";
 
 const toggleSubscription = asyncHandler(async (req, res) => {
   const { channelId } = req.params;
@@ -27,6 +31,13 @@ const toggleSubscription = asyncHandler(async (req, res) => {
       channel: channelId,
     });
 
+    await createNotification({
+      recipientId: channelId,
+      actorId: req.user._id,
+      type: "subscribe_channel",
+      targetId: req.user._id,
+    });
+
     return res
       .status(201)
       .json(
@@ -41,6 +52,13 @@ const toggleSubscription = asyncHandler(async (req, res) => {
   const deleteSubscription = await Subscription.findOneAndDelete(
     subscribed._id
   );
+
+  await deleteNotification({
+    recipientId: channelId,
+    actorId: req.user._id,
+    type: "subscribe_channel",
+    targetId: req.user._id,
+  });
 
   return res
     .status(200)

@@ -101,7 +101,6 @@ const deleteNotification = async ({ recipientId, actorId, type, targetId }) => {
       actor: actorId,
       type: type,
       target: targetId,
-      isRead: false,
     });
   } catch (error) {
     console.log(error);

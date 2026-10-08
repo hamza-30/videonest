@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { FaHeart, FaComment } from "react-icons/fa";
+import { FaHeart, FaComment, FaUserPlus } from "react-icons/fa";
 import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { useAuthContext } from "../context/auth/AuthContextProvider";
 
@@ -27,6 +27,12 @@ const typeConfig = {
     icon: FaComment,
     iconColor: "text-[#8132e5]",
     badgeBg: "bg-[#f3eefe]",
+  },
+  subscribe_channel: {
+    message: "subscribed to your channel",
+    icon: FaUserPlus,
+    iconColor: "text-blue-500",
+    badgeBg: "bg-blue-50",
   },
 };
 
@@ -82,6 +88,10 @@ function NotificationItem({ notification, onClose }) {
       } else {
         const channelUsername = user?.username || actor?.username;
         if (channelUsername) navigate(`/channel/${channelUsername}`);
+      }
+    } else if (type === "subscribe_channel") {
+      if (actor?.username) {
+        navigate(`/channel/${actor.username}`);
       }
     }
   };
