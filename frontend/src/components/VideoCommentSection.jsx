@@ -87,7 +87,7 @@ function VideoCommentSection({ videoId }) {
   return (
     <div className="flex flex-col gap-6 mt-4">
       <h2 className="text-lg font-bold text-gray-900">
-        {comments.length} Comments
+        {comments.length} {comments.length === 1 ? "Comment" : "Comments"}
       </h2>
 
       {/* Add Comment Input */}
