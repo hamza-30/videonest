@@ -306,7 +306,7 @@ function TweetCard({
           {showMenu && (
             <div
               ref={menuRef}
-              className="absolute right-9 top-4.5 mt-1 z-30 w-30 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg shadow-slate-200/50"
+              className="absolute right-0 top-4.5 mt-1 z-30 w-30 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg shadow-slate-200/50"
             >
               <button
                 type="button"
