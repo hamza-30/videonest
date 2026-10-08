@@ -14,18 +14,18 @@ A full-stack video sharing platform built with the MERN stack. Users can upload,
 
 **Backend**
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat&logo=mongodb&logoColor=white)
-![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=flat&logo=cloudinary&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=flat&logo=jsonwebtokens&logoColor=white)
+- Node.js
+- Express
+- MongoDB
+- Cloudinary
+- JWT
 
 **Frontend**
 
-![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS_v4-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router_v7-CA4245?style=flat&logo=reactrouter&logoColor=white)
+- React 19
+- Vite
+- Tailwind CSS v4
+- React Router v7
 
 ---
 
@@ -52,11 +52,12 @@ A full-stack video sharing platform built with the MERN stack. Users can upload,
 
 ### Channels and Social
 
+- Real-time channel subscription notifications via Server-Sent Events (SSE)
 - Subscribe to and unsubscribe from any channel
 - Per-channel tabs: Videos, Playlists, Tweets, Subscribed channels
 - Like videos, comments, and tweets with idempotent toggle logic
 - Comment on videos with inline edit and delete for comment owners
-- Tweets with emoji picker, inline editing, and deletion
+- Tweets with emoji picker, inline editing, deletion, and a standalone view page
 
 ### Playlists
 
@@ -78,6 +79,7 @@ A full-stack video sharing platform built with the MERN stack. Users can upload,
 
 ### UI and UX
 
+- Animated split-screen layout for authentication pages (Login & Signup)
 - Skeleton loaders on every data-driven view (no spinners anywhere in the app)
 - Optimistic UI updates on likes, subscriptions, playlist toggles, and publish status
 - Responsive layout: collapsible icon-only sidebar on desktop, sliding overlay drawer on mobile
@@ -123,6 +125,7 @@ A full-stack video sharing platform built with the MERN stack. Users can upload,
 | Playlist     | name, description, videos[], owner                                                 |
 | Subscription | subscriber, channel                                                                |
 | Tweet        | content, owner                                                                     |
+| Notification | recipient, actor, type (enum), target, isRead                                      |
 
 ---
 
@@ -209,6 +212,7 @@ All endpoints are prefixed with `/api/v1`.
 | Playlists     | `/playlists`     |
 | Subscriptions | `/subscriptions` |
 | Tweets        | `/tweets`        |
+| Notifications | `/notifications` |
 | Dashboard     | `/dashboard`     |
 | Healthcheck   | `/healthcheck`   |
 
