@@ -6,7 +6,7 @@ A full-stack video sharing platform built with the MERN stack. Users can upload,
 
 ## Live Demo
 
-> videonest-stream.vercel.app
+> [videonest-stream.vercel.app](https://videonest-stream.vercel.app/)
 
 ---
 
