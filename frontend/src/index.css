@@ -55,3 +55,31 @@ body {
 *::-webkit-scrollbar-thumb:hover {
   background: #8f8f8f;
 }
+
+@keyframes wander-1 {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(25vw, -15vh) rotate(120deg) scale(1.1); }
+  66% { transform: translate(10vw, 25vh) rotate(240deg) scale(0.9); }
+  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+
+@keyframes wander-2 {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(-20vw, 20vh) rotate(-120deg) scale(0.9); }
+  66% { transform: translate(15vw, -10vh) rotate(-240deg) scale(1.1); }
+  100% { transform: translate(0, 0) rotate(-360deg) scale(1); }
+}
+
+@keyframes wander-3 {
+  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(15vw, 15vh) rotate(90deg) scale(1.2); }
+  66% { transform: translate(-25vw, -20vh) rotate(180deg) scale(0.8); }
+  100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+}
+
+.animate-wander-1 { animation: wander-1 25s ease-in-out infinite; }
+.animate-wander-2 { animation: wander-2 28s ease-in-out infinite; }
+.animate-wander-3 { animation: wander-3 22s ease-in-out infinite; }
+.animate-wander-1-delayed { animation: wander-1 25s ease-in-out infinite -12s; }
+.animate-wander-2-delayed { animation: wander-2 28s ease-in-out infinite -14s; }
+.animate-wander-3-delayed { animation: wander-3 22s ease-in-out infinite -11s; }
