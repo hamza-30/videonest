@@ -56,8 +56,6 @@ function VideoDetails({ video, isOwner }) {
   // Description truncation logic
   const isDescLong = (video.description?.length || 0) > CLAMP_THRESHOLD;
 
-  console.log(video);
-
   return (
     <div className="flex flex-col gap-4">
       {/* Video Title */}
