@@ -220,16 +220,16 @@ All endpoints are prefixed with `/api/v1`.
 
 ## Screenshots
 
-## Home Page
+### Home Page
 <img width="1920" height="1865" alt="HomePage" src="https://github.com/user-attachments/assets/4ba02a9d-b949-4182-a1de-ff953aebfae2" />
 
-## Watch Page
+### Watch Page
 <img width="1920" height="1451" alt="WatchPage" src="https://github.com/user-attachments/assets/c71605d6-ceb1-4354-b886-c104d78d010f" />
 
-## Creator Dashboard
+### Creator Dashboard
 <img width="1920" height="1445" alt="CreatorDashboardPage" src="https://github.com/user-attachments/assets/6593f78a-650c-4619-b4f1-d8f36eb3bd68" />
 
-## Channel Page
+### Channel Page
 <img width="1920" height="1373" alt="ChannelPage" src="https://github.com/user-attachments/assets/0ecc0030-e8ec-4af3-a194-3dbd4a8cf84a" />
 
 ---
