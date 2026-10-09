@@ -68,7 +68,10 @@ function History() {
 
           {/* Actual video cards */}
           {!loading &&
-            videos.map((video) => <VideoCard key={video._id} video={video} />)}
+            videos.length > 0 &&
+            videos.map((video) =>
+              video ? <VideoCard key={video._id} video={video} /> : null
+            )}
         </div>
 
         {!loading && !error && videos.length === 0 && (
